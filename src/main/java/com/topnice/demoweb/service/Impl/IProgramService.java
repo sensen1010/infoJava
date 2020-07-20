@@ -2,9 +2,7 @@ package com.topnice.demoweb.service.Impl;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.topnice.demoweb.entity.InfoLayout;
 import com.topnice.demoweb.entity.Program;
-import com.topnice.demoweb.repository.InfoLayoutRepository;
 import com.topnice.demoweb.repository.ProgramRepository;
 import com.topnice.demoweb.service.ProgramService;
 import com.topnice.demoweb.util.DateUtil;
@@ -26,12 +24,10 @@ public class IProgramService implements ProgramService {
     @Autowired
     ProgramRepository programRepository;
 
-    @Autowired
-    InfoLayoutRepository infoLayoutRepository;
 
 
     @Override
-    public Program addProgram(Program program) {
+    public Program add(Program program) {
 
         if (program.getHorseLamp().equals("1")) {
             if (program.getHorseText() != null && !program.equals("")) {
@@ -45,7 +41,7 @@ public class IProgramService implements ProgramService {
     }
 
     @Override
-    public String findAllByName(String name, String page, String size) {
+    public String findByName(String name, String page, String size) {
 
         name = name == null || name.equals("") ? "" : name;
 
@@ -67,10 +63,6 @@ public class IProgramService implements ProgramService {
             map.put("content", program.getContent());
             map.put("horseText", program.getHorseText());
             map.put("horseLamp", program.getHorseLamp());
-            InfoLayout infoLayout = infoLayoutRepository.findAllByUuid(program.getLayoutId());
-            map.put("layoutName", infoLayout.getName());
-            map.put("layoutType", infoLayout.getType());
-            map.put("layoutImgUrl", infoLayout.getImgUrl());
             map.put("layoutId", program.getLayoutId());
             map.put("userId", program.getUserId());
             // map.put("set",program.getProHis()+"");
@@ -84,7 +76,7 @@ public class IProgramService implements ProgramService {
     }
 
     @Override
-    public Program updateProgram(Program program) {
+    public Program modifyProgram(Program program) {
         return null;
     }
 }

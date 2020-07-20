@@ -6,9 +6,12 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/info?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
+    data: classpath:data-mysql.sql
+
   jpa:
     hibernate:
       ddl-auto: update
+
     # ddl-auto: create 每次运行程序建立一个空的表，如果表存在，先删除再新建
     # ddl-auto: update 程序第一次运行时创建表，之后若存在数据，不会删除表
     # ddl-auto: create-drop 应用停下来的时候就删除表

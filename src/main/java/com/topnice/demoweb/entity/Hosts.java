@@ -25,6 +25,9 @@ public class Hosts {
     @ApiModelProperty(value = "主机id")
     private String hostId;
 
+    @ApiModelProperty(value = "企业Id")
+    private String enterId;
+
     @ApiModelProperty(value = "主机名称")
     private String hostName;
 

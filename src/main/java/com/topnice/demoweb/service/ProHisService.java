@@ -6,10 +6,10 @@ import com.topnice.demoweb.entity.ProHis;
 public interface ProHisService {
 
     //添加历史
-    ProHis addProHis(ProHis proHis, String[] hostList);
+    ProHis add(ProHis proHis);
 
     //根据节目名称查询历史
-    String findAllByName(String name, String page, String size);
+    String findByName(String name, String page, String size);
 
 
 }
