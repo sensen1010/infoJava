@@ -33,29 +33,31 @@ public class IUserService implements UsersService {
         Map<String, String> map = new HashMap<>();
         map.put("userId", user.getUserId());
         map.put("type", user.getType());
+        map.put("enterId", user.getEnterId());
         list.add(map);
         return JSONObject.toJSONString(list);
     }
 
     @Override
-    public Users findAllByUserId(String userId) {
+    public Users findByUserId(String userId) {
         return userRepository.findAllByUserId(userId);
     }
 
     @Override
-    public Users addUsers(Users users) {
-
+    public Users add(Users users, String enterId) {
         Users re = userRepository.findAllByLoginName(users.getLoginName());
         if (re != null) {
             return null;
         }
+        users.setType("2");
         users.setCreationTime(new Date());
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
+        users.setEnterId(enterId);
         return userRepository.save(users);
     }
 
     @Override
-    public String findAllByLoginName(String loginName, String page, String size) {
+    public String findByLoginNameList(String enterId, String loginName, String page, String size) {
 
         loginName = loginName == null || loginName.equals("") ? "" : loginName;
         //如果为null默认为0
@@ -64,7 +66,7 @@ public class IUserService implements UsersService {
         Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
         Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "id");
 
-        Page<Users> all = userRepository.findAllByLoginNameContaining(loginName, pageable);
+        Page<Users> all = userRepository.findAllByEnterIdAndLoginNameContaining(enterId, loginName, pageable);
 
         List<Map<String, Object>> lists = new ArrayList<>();
         List<Map<String, String>> list = new ArrayList<>();
@@ -82,5 +84,14 @@ public class IUserService implements UsersService {
         maps.put("data", JSONObject.toJSONString(list));
         lists.add(maps);
         return JSONObject.toJSONString(lists);
+    }
+
+    @Override
+    public Users findByLoginName(String loginName) {
+        Users re = userRepository.findAllByLoginName(loginName);
+        if (re != null) {
+            return null;
+        }
+        return re;
     }
 }

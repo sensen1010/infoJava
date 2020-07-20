@@ -27,9 +27,9 @@ public class HostsController {
 
     @ApiOperation(value = "/add", tags = "添加主机")
     @RequestMapping("/add")
-    private Map<String, Object> addHosts(String hostLinkId, String hostName) {
+    private Map<String, Object> addHosts(String hostLinkId, String hostName, String enterId) {
         map = new HashMap<>();
-        Hosts hosts = hostsService.addHosts(hostLinkId, hostName);
+        Hosts hosts = hostsService.add(hostLinkId, hostName, enterId);
         if (hosts == null) {
             map.put("code", "1");
             map.put("msg", "添加失败，主机已存在");
@@ -45,17 +45,17 @@ public class HostsController {
     @RequestMapping("/select")
     private Map<String, Object> selectHosts(String hostName, String hostState, String linkState, String page, String size) {
         map = new HashMap<>();
-        String data = hostsService.selectHosts(hostName, hostState, linkState, page, size);
+        String data = hostsService.findHosts(hostName, hostState, linkState, page, size);
         WebSocketServer.selectAllUser();
         map.put("data", data + "");
         return map;
     }
 
-    @ApiOperation(value = "/selectId", tags = "管理员查询主机列表")
+    @ApiOperation(value = "/selectId", tags = "企业管理员根据连接Id查询主机列表")
     @RequestMapping("/selectId")
     private Map<String, Object> selectHostId(String linkId) {
         map = new HashMap<>();
-        Hosts all = hostsService.selectHostId(linkId);
+        Hosts all = hostsService.findHostId(linkId);
         System.out.println("进入查询");
         if (all == null) {
             map.put("code", "1");
@@ -69,11 +69,11 @@ public class HostsController {
         return map;
     }
 
-    @ApiOperation(value = "/userSelect", tags = "管理员查询主机列表")
+    @ApiOperation(value = "/userSelect", tags = "企业管理员查询主机列表")
     @RequestMapping("/userSelect")
-    private Map<String, Object> userSelectHosts(String hostAdminID, String state, String page, String size) {
+    private Map<String, Object> userSelectHosts(String enterId, String state, String page, String size) {
         map = new HashMap<>();
-        String all = hostsService.selectHost(hostAdminID, state, page, size);
+        String all = hostsService.findHost(enterId, state, page, size);
         if (all.equals("1")) {
             map.put("code", "1");
             map.put("msg", "无数据");
@@ -89,7 +89,7 @@ public class HostsController {
     @RequestMapping("/update/name")
     private Map<String, Object> updateHostsName(String hostId, String hostName) {
         map = new HashMap<>();
-        Hosts hosts = hostsService.updateHostName(hostId, hostName);
+        Hosts hosts = hostsService.modifyHostName(hostId, hostName);
         return mapMsg(hosts);
     }
 
@@ -97,7 +97,7 @@ public class HostsController {
     @RequestMapping("/update/state")
     private Map<String, Object> updateHostsState(String hostId, String state) {
         map = new HashMap<>();
-        Hosts hosts = hostsService.updateHostState(hostId, state);
+        Hosts hosts = hostsService.modifyHostState(hostId, state);
         return mapMsg(hosts);
     }
 

@@ -8,7 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @DynamicInsert
@@ -45,11 +44,5 @@ public class ProHis implements Serializable {
     private String showType;//显示类型  0开机自动显示，1开机不显示
 
     private Date creationTime;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "ProHisHost",
-            joinColumns = {@JoinColumn(name = "proHisId", referencedColumnName = "proHisId")},
-            inverseJoinColumns = {@JoinColumn(name = "proHisHostId", referencedColumnName = "proHisHostId")})
-    private Set<ProHisHost> proHisHosts;
 
 }

@@ -1,7 +1,6 @@
 package com.topnice.demoweb.service;
 
 
-import com.topnice.demoweb.entity.Hosts;
 import com.topnice.demoweb.util.WebSocketUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -84,13 +83,13 @@ public class WebSocketServer {
         }
         System.out.println("当前用户id：" + userId);
         //判断该链接是否存在
-        Hosts hosts = hostsService.selectHostId(userId);
-        if (hosts != null) {
-            hosts.setLinkState("0");
-            hostsService.updateHostLState(hosts);
-        } else {
-            hostsService.addHosts(userId, name);
-        }
+//        Hosts hosts = hostsService.selectHostId(userId);
+//        if (hosts != null) {
+//            hosts.setLinkState("0");
+//            hostsService.updateHostLState(hosts);
+//        } else {
+//            hostsService.addHosts(userId, name);
+//        }
 
         log.info("用户连接:" + name + userId + ",当前在线人数为:" + getOnlineCount());
         // System.out.println("用户连接:"+userId+",当前在线人数为:" + getOnlineCount());
@@ -110,11 +109,11 @@ public class WebSocketServer {
         if (webSocketMap.containsKey(userId)) {
             webSocketMap.remove(userId);
             //查询主机，修改状态
-            Hosts hosts = hostsService.selectHostId(userId);
-            if (hosts != null) {
-                hosts.setLinkState("1");
-                hostsService.updateHostLState(hosts);
-            }
+//            Hosts hosts = hostsService.selectHostId(userId);
+//            if (hosts != null) {
+//                hosts.setLinkState("1");
+//                hostsService.updateHostLState(hosts);
+//            }
             //从set中删除
             subOnlineCount();
         }

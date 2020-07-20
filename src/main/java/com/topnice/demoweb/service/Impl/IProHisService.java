@@ -2,11 +2,11 @@ package com.topnice.demoweb.service.Impl;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.topnice.demoweb.entity.InfoLayout;
 import com.topnice.demoweb.entity.ProHis;
-import com.topnice.demoweb.entity.ProHisHost;
 import com.topnice.demoweb.entity.Program;
-import com.topnice.demoweb.repository.*;
+import com.topnice.demoweb.repository.HostsRepository;
+import com.topnice.demoweb.repository.ProHisRepository;
+import com.topnice.demoweb.repository.ProgramRepository;
 import com.topnice.demoweb.service.ProHisService;
 import com.topnice.demoweb.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +32,9 @@ public class IProHisService implements ProHisService {
     @Autowired
     HostsRepository hostsRepository;
 
-    @Autowired
-    ProHisHostRepository hisHostRepository;
-    @Autowired
-    InfoLayoutRepository infoLayoutRepository;
 
     @Override
-    public ProHis addProHis(ProHis proHis, String[] hostList) {
+    public ProHis add(ProHis proHis) {
         proHis.setProHisId(UUID.randomUUID().toString().replace("-", ""));
         proHis.setCreationTime(new Date());
         //根据节目id查询节目信息
@@ -56,20 +52,11 @@ public class IProHisService implements ProHisService {
         proHis.setHorseText(program.getHorseText());
 
         ProHis reprohis = proHisRepository.save(proHis);
-        if (proHis.getType().equals("1")) {
-            for (String host : hostList) {
-                ProHisHost proHisHost = new ProHisHost();
-                proHisHost.setProHisHostId(UUID.randomUUID().toString().replace("-", ""));
-                proHisHost.setHostId(host);
-                proHisHost.setProHisId(reprohis.getProHisId());
-                hisHostRepository.save(proHisHost);
-            }
-        }
         return reprohis;
     }
 
     @Override
-    public String findAllByName(String name, String page, String size) {
+    public String findByName(String name, String page, String size) {
         name = name == null || name.equals("") ? "" : name;
 
         //如果为null默认为0
@@ -87,10 +74,6 @@ public class IProHisService implements ProHisService {
             map.put("id", program.getId() + "");
             map.put("name", program.getName());
             map.put("content", program.getContent());
-            InfoLayout infoLayout = infoLayoutRepository.findAllByUuid(program.getLayoutId());
-            map.put("layoutType", infoLayout.getType());
-            map.put("layoutName", infoLayout.getName());
-            map.put("layoutImgUrl", infoLayout.getImgUrl());
             map.put("layoutId", program.getLayoutId());
             map.put("horseLamp", program.getHorseLamp());
             map.put("horseText", program.getHorseText());
@@ -98,14 +81,6 @@ public class IProHisService implements ProHisService {
             map.put("creationTime", DateUtil.date2TimeStamp(program.getCreationTime(), "yyyy-MM-dd HH:mm"));
             map.put("type", program.getType());//0 全部  1部分
             map.put("showType", program.getShowType());
-            List<Map<String, String>> list1 = new ArrayList<>();
-            for (ProHisHost proHisHost : program.getProHisHosts()) {
-                Map<String, String> map1 = new HashMap<>();
-                map1.put("hostName", hostsRepository.findAllByHostId(proHisHost.getHostId()).getHostName());
-                map1.put("hostId", proHisHost.getHostId());
-                list1.add(map1);
-            }
-            map.put("hostList", JSONObject.toJSONString(list1));
             list.add(map);
         }
         maps.put("size", programs.getTotalElements());

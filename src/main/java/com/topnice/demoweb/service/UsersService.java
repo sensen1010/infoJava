@@ -5,10 +5,11 @@ import com.topnice.demoweb.entity.Users;
 public interface UsersService {
     String login(Users users);
 
-    Users findAllByUserId(String userID);
+    Users findByUserId(String userID);
 
-    Users addUsers(Users users);
+    Users add(Users users, String enterId);
 
-    String findAllByLoginName(String loginName, String page, String size);
+    String findByLoginNameList(String enterId, String loginName, String page, String size);
 
+    Users findByLoginName(String loginName);
 }

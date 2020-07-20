@@ -1,6 +1,5 @@
 package com.topnice.demoweb.entity;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
@@ -15,7 +14,6 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 @Entity
-@ApiModel(value = "企业", description = "企业")
 public class Enterprise implements Serializable {
 
 
@@ -34,14 +32,29 @@ public class Enterprise implements Serializable {
     @ApiModelProperty(value = "主机数量")
     private String hostNum;
 
+    @ApiModelProperty(value = "企业认证信息")
+    private String enterAuth;
+
     @ApiModelProperty(value = "创建时间")
     private Date creationTime;
+
+    @ApiModelProperty(value = "状态 0可用 1禁用")
+    private Integer state;
+
+    @ApiModelProperty(value = "企业ip")
+    private String enterIp;
 
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users",
             joinColumns = {@JoinColumn(name = "enterId", referencedColumnName = "enterId")},
             inverseJoinColumns = {@JoinColumn(name = "userId", referencedColumnName = "userId")})
-    private Set<ProHisHost> proHisHosts;
+    private Set<Users> users;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "hosts",
+            joinColumns = {@JoinColumn(name = "enterId", referencedColumnName = "enterId")},
+            inverseJoinColumns = {@JoinColumn(name = "hostId", referencedColumnName = "hostId")})
+    private Set<Hosts> hosts;
 
 }

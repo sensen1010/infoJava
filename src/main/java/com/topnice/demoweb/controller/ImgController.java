@@ -1,11 +1,9 @@
 package com.topnice.demoweb.controller;
 
 
-import com.topnice.demoweb.entity.ImgUrl;
-import com.topnice.demoweb.exception.MyException;
+import com.topnice.demoweb.entity.FileUrl;
 import com.topnice.demoweb.service.FileUpService;
-import com.topnice.demoweb.service.HostsImgService;
-import com.topnice.demoweb.service.ImgUrlService;
+import com.topnice.demoweb.service.FileUrlService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -23,18 +21,16 @@ import java.util.Map;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Api(value = "/img", tags = {"图片操作接口"})
+@Api(value = "/file", tags = {"文件操作接口"})
 @RestController
-@RequestMapping("/img")
+@RequestMapping("/file")
 public class ImgController {
     @Autowired
     HttpServletRequest request;
 
     @Autowired
-    ImgUrlService imgUrlService;
+    FileUrlService fileUrlService;
 
-    @Autowired
-    HostsImgService hostsImgService;
 
     @Autowired
     FileUpService fileUpService;
@@ -48,41 +44,24 @@ public class ImgController {
      * @author: sen
      * @date: 2020/6/18 0018 11:57
      **/
-    @ApiOperation(value = "/imgList", notes = "分页模糊查询图片列表：名称、状态、显示状态")
-    @RequestMapping("/imgList")
-    private Map<String, Object> selectImgList(String name, String state, String showType, String page, String size) {
+    @ApiOperation(value = "/fileList", notes = "根据企业Id分页模糊查询图片列表：名称、状态、显示状态")
+    @RequestMapping("/fileList")
+    private Map<String, Object> selectImgList(String enterId, String name, String state, String page, String size) {
         myMap = new HashMap<>();
-        myMap.put("data", imgUrlService.findAllByImgNameStateShow(name, state, showType, page, size));
+        myMap.put("data", fileUrlService.findByFileNameAndState(name, state, page, size));
         myMap.put("code", "0");
         return myMap;
     }
 
-    @ApiOperation(value = "/isImgList", notes = "查询类型为jpg、png、MP4的文件")
-    @RequestMapping("/isImgList")
-    private Map<String, Object> selectIsImgList(String type, String page, String size) {
+    @ApiOperation(value = "/fileTyList", notes = "查询类型为jpg、png、MP4的文件")
+    @RequestMapping("/fileTyList")
+    private Map<String, Object> selectIsImgList(String typeId, String page, String size) {
         myMap = new HashMap<>();
-        myMap.put("data", imgUrlService.findAllByIsImgMp4(type, page, size));
+        myMap.put("data", fileUrlService.findByFileTypeId(typeId, page, size));
         myMap.put("code", "0");
         return myMap;
     }
 
-    @ApiOperation(value = "/pa", notes = "查询主机图片关联主机id，图片id，页数")
-    @RequestMapping("/pa")
-    private Map<String, Object> selectImg(String hostId, String imgId, String state, String page, String size) throws MyException {
-        myMap = new HashMap<>();
-        int rpage = Integer.parseInt(page);
-        int rsize = Integer.parseInt(size);
-        hostsImgService.findAllByHostImg(hostId, imgId);
-        return myMap;
-    }
-
-    @ApiOperation(value = "/host/select", notes = "主机查询自己可查看的图片，主机id，state")
-    @RequestMapping("/host/select")
-    private Map<String, Object> hostSelectImg(String hostId, String state, String hostImgState) throws MyException {
-        myMap = new HashMap<>();
-        myMap.put("data", hostsImgService.findAllByHostIdImgUrl(hostId, state, hostImgState));
-        return myMap;
-    }
 
     /**
      * @desc: 修改类
@@ -96,35 +75,15 @@ public class ImgController {
      **/
     @ApiOperation(value = "/update/state", notes = "修改图片表的状态,0正常 1禁用 2删除主机id，state")
     @RequestMapping("/update/state")
-    private Map<String, Object> updateImg(String imgUrlId, String state) {
+    private Map<String, Object> updateImg(String fileUrlId, String state) {
         myMap = new HashMap<>();
-        ImgUrl imgUrl = imgUrlService.findAllByImgUrlId(imgUrlId);
-        if (imgUrl == null || imgUrl.equals("")) {
+        FileUrl fileUrl = fileUrlService.findByFileUrlId(fileUrlId);
+        if (fileUrl == null || fileUrl.equals("")) {
             myMap.put("code", "1");
-            myMap.put("msg", "图片不存在");
+            myMap.put("msg", "文件不存在");
         } else {
-            imgUrl.setState(state);
-            imgUrlService.updateImgTime(imgUrl);
-            myMap.put("code", "0");
-            myMap.put("msg", "修改成功");
-        }
-        return myMap;
-    }
-
-    /**
-     * @desc: 修改图片的显示类型、0为库存、1为全部、2为部分
-     * @author: sen
-     * @date: 2020/6/18 0018 13:45
-     **/
-    @ApiOperation(value = "/updateImg/show", notes = "修改图片表的显示类型 0为库存、1为全部显示、2为部分显示图片id，state")
-    @RequestMapping("/updateImg/show")
-    private Map<String, Object> updateImg(String imgUrlId, String showState, String[] hostsList) {
-        myMap = new HashMap<>();
-        String re = fileUpService.updateImg(imgUrlId, showState, hostsList);
-        if (re.equals("1")) {
-            myMap.put("code", "1");
-            myMap.put("msg", "图片不存在");
-        } else {
+            fileUrl.setState(state);
+            fileUrlService.modifyFileTime(fileUrl);
             myMap.put("code", "0");
             myMap.put("msg", "修改成功");
         }
@@ -138,11 +97,10 @@ public class ImgController {
      **/
     @ApiOperation(value = "/up", notes = "图片上传接口")
     @RequestMapping("/up")
-    public synchronized Map<String, Object> singleFileUpload(@RequestParam("file") MultipartFile[] reportFile, String type, String[] hostList) {
+    public synchronized Map<String, Object> singleFileUpload(@RequestParam("file") MultipartFile[] reportFile, String userId) {
         myMap = new HashMap<>();
         myMap.put("code", "0");
-        System.out.println("上传中");
-        myMap.put("noImgList", fileUpService.saveFile(reportFile, type, hostList));
+        myMap.put("noImgList", fileUpService.add(reportFile, userId));
         System.out.println(myMap.toString());
         return myMap;
     }
