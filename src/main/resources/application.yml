@@ -1,0 +1,45 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/info?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    # ddl-auto: create 每次运行程序建立一个空的表，如果表存在，先删除再新建
+    # ddl-auto: update 程序第一次运行时创建表，之后若存在数据，不会删除表
+    # ddl-auto: create-drop 应用停下来的时候就删除表
+    # ddl-auto: none 什么都不做
+    # ddl-auto: validate 验证类里面的属性跟表是否一致，不一致就报错
+    show-sql: false
+  jackson:
+    #返回date日期格式化
+    date-format: com.fasterxml.jackson.databind.util.StdDateFormat
+    #时区
+    time-zone: GMT+8
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+
+files:
+  path: ${file-path:f:/files}
+
+  output:
+    ansi:
+      enabled: always
+  servlet:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: -1
+server:
+  tomcat:
+    uri-encoding: UTF-8
+prop:
+  upload-folder: E:\\imgfile\\
+  upload-news: E:\\newsImgfile\\
+  file-host: http://192.168.1.52:8080/newfile
