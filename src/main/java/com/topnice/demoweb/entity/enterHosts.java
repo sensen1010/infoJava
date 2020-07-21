@@ -10,12 +10,12 @@ import javax.persistence.*;
 @DynamicUpdate
 @DynamicInsert
 @Entity
-public class EnterHosts {
+public class enterHosts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private int id;
+    private Integer id;
 
     private String enterId;
 

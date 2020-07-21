@@ -39,20 +39,20 @@ public class Enterprise implements Serializable {
     private Date creationTime;
 
     @ApiModelProperty(value = "状态 0可用 1禁用")
-    private Integer state;
+    private int state;
 
     @ApiModelProperty(value = "企业ip")
     private String enterIp;
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users",
+    @JoinTable(name = "enterUser",
             joinColumns = {@JoinColumn(name = "enterId", referencedColumnName = "enterId")},
             inverseJoinColumns = {@JoinColumn(name = "userId", referencedColumnName = "userId")})
     private Set<Users> users;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "hosts",
+    @JoinTable(name = "enterHosts",
             joinColumns = {@JoinColumn(name = "enterId", referencedColumnName = "enterId")},
             inverseJoinColumns = {@JoinColumn(name = "hostId", referencedColumnName = "hostId")})
     private Set<Hosts> hosts;

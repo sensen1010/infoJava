@@ -9,7 +9,13 @@ public interface UsersService {
 
     Users add(Users users, String enterId);
 
-    String findByLoginNameList(String enterId, String loginName, String page, String size);
+    String findByNameList(String enterId, String name, String page, String size);
 
-    Users findByLoginName(String loginName);
+    Users findByName(String name);
+
+    /**
+     * 根据账号、企业id查询是否存在
+     */
+    Users findByUserNameAndEnterId(String userName, String enterId);
+
 }

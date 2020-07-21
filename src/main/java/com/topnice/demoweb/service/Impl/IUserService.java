@@ -39,7 +39,7 @@ public class IUserService implements UsersService {
 
     @Override
     public Users add(Users users, String enterId) {
-        Users re = userRepository.findAllByLoginName(users.getLoginName());
+        Users re = userRepository.findAllByName(users.getName());
         if (re != null) {
             return null;
         }
@@ -51,7 +51,7 @@ public class IUserService implements UsersService {
     }
 
     @Override
-    public String findByLoginNameList(String enterId, String loginName, String page, String size) {
+    public String findByNameList(String enterId, String loginName, String page, String size) {
 
         loginName = loginName == null || loginName.equals("") ? "" : loginName;
         //如果为null默认为0
@@ -60,7 +60,7 @@ public class IUserService implements UsersService {
         Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
         Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "id");
 
-        Page<Users> all = userRepository.findAllByEnterIdAndLoginNameContaining(enterId, loginName, pageable);
+        Page<Users> all = userRepository.findAllByEnterIdAndNameContaining(enterId, loginName, pageable);
 
         List<Map<String, Object>> lists = new ArrayList<>();
         List<Map<String, String>> list = new ArrayList<>();
@@ -69,7 +69,7 @@ public class IUserService implements UsersService {
             Map<String, String> map = new HashMap<>();
             map.put("id", users.getId() + "");
             map.put("userName", users.getUserName());
-            map.put("loginName", users.getLoginName());
+            map.put("loginName", users.getName());
             map.put("creationTime", DateUtil.date2TimeStamp(users.getCreationTime(), "yyyy-MM-dd HH:mm:ss") + "");
             map.put("userId", users.getUserId());
             list.add(map);
@@ -81,8 +81,17 @@ public class IUserService implements UsersService {
     }
 
     @Override
-    public Users findByLoginName(String loginName) {
-        Users re = userRepository.findAllByLoginName(loginName);
+    public Users findByName(String loginName) {
+        Users re = userRepository.findAllByName(loginName);
+        if (re != null) {
+            return null;
+        }
+        return re;
+    }
+
+    @Override
+    public Users findByUserNameAndEnterId(String userName, String enterId) {
+        Users re = userRepository.findAllByUserNameAndEnterId(userName, enterId);
         if (re != null) {
             return null;
         }

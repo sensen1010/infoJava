@@ -16,4 +16,7 @@ public interface EnterpriseService {
     //修改企业信息
     Enterprise modifyEnter(Enterprise enterprise);
 
+    //修改企业状态（删除）
+    Enterprise modifyEnterState(String enterId, String state);
+
 }

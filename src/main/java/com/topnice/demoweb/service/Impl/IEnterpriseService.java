@@ -36,20 +36,20 @@ public class IEnterpriseService implements EnterpriseService {
         enterprise.setEnterId(UUID.randomUUID().toString().replace("-", ""));
         Enterprise reEnter = enterRepository.save(enterprise);
         //根据企业信息，添加一个默认账号
-        String loginName;
+        String userName;
         while (true) {
-            loginName = RandomStringUtils.randomAlphanumeric(8);
-            Users reUsers = usersService.findByLoginName(loginName);
-            if (reEnter == null) {
+            userName = RandomStringUtils.randomAlphanumeric(8);
+            Users reUsers = usersService.findByUserNameAndEnterId(userName, reEnter.getEnterId());
+            if (reUsers == null) {
                 break;
             }
         }
         Users users = new Users();
         users.setEnterId(reEnter.getEnterId());
         users.setCreationTime(new Date());
-        users.setUserName(enterprise.getEnterName());
+        users.setUserName(userName);
         users.setType("1");
-        users.setLoginName(loginName);
+        users.setName(reEnter.getEnterName());
         users.setPassword("123456");
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
 
@@ -58,7 +58,7 @@ public class IEnterpriseService implements EnterpriseService {
         Map<String, String> map = new HashMap<>();
         map.put("userId", re.getUserId());
         map.put("userName", re.getUserName());
-        map.put("loginName", re.getLoginName());
+        map.put("name", re.getName());
         map.put("pow", re.getPassword());
         map.put("type", re.getType());
         list.add(map);
@@ -114,5 +114,16 @@ public class IEnterpriseService implements EnterpriseService {
 
 
         return null;
+    }
+
+    @Override
+    public Enterprise modifyEnterState(String enterId, String state) {
+
+        Enterprise enterprise = enterRepository.findAllByEnterId(enterId);
+        if (enterprise == null) {
+            return null;
+        }
+        enterprise.setState(Integer.parseInt(state));
+        return enterRepository.saveAndFlush(enterprise);
     }
 }

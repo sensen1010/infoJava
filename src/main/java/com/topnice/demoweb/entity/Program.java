@@ -22,7 +22,7 @@ public class Program implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private int id;
+    private Integer id;
 
     private String proId;
 
@@ -41,7 +41,7 @@ public class Program implements Serializable {
     private Date creationTime;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "ProHis",
+    @JoinTable(name = "programProHis",
             joinColumns = {@JoinColumn(name = "proId", referencedColumnName = "proId")},
             inverseJoinColumns = {@JoinColumn(name = "proHisId", referencedColumnName = "proHisId")})
     private Set<ProHis> proHis;

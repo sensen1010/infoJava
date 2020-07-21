@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -14,7 +15,7 @@ import java.util.Date;
 @DynamicUpdate
 @Entity
 @ApiModel(value = "安卓主机", description = "这是安卓主机")
-public class Hosts {
+public class Hosts implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

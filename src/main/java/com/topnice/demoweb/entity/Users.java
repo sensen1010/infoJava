@@ -33,11 +33,11 @@ public class Users implements Serializable {
     @ApiModelProperty(value = "用户名")
     private String userName;
 
-    @ApiModelProperty(value = "登录名")
-    private String loginName;
-
     @ApiModelProperty(value = "密码")
     private String password;
+
+    @ApiModelProperty(value = "名称")
+    private String name;
 
     @ApiModelProperty(value = "类型")
     private String type;//0为超级管理员 、 1为企业超级管理员 、2为企业普通用户

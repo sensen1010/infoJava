@@ -16,9 +16,10 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     Users findAllByUserId(String userId);
 
-    Page<Users> findAllByEnterIdAndLoginNameContaining(String enterId, String loginName, Pageable pageable);
+    Page<Users> findAllByEnterIdAndNameContaining(String enterId, String name, Pageable pageable);
 
-    Users findAllByLoginName(String loginName);
+    Users findAllByName(String name);
 
+    Users findAllByUserNameAndEnterId(String userName, String enterId);
 
 }
