@@ -3,7 +3,7 @@ package com.topnice.demoweb.service;
 import com.topnice.demoweb.entity.Users;
 
 public interface UsersService {
-    String login(Users users);
+    Users login(Users users);
 
     Users findByUserId(String userID);
 

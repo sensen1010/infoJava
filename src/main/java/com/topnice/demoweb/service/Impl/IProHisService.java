@@ -68,7 +68,6 @@ public class IProHisService implements ProHisService {
         List<Map<String, Object>> lists = new ArrayList<>();
         List<Map<String, String>> list = new ArrayList<>();
         Map<String, Object> maps = new HashMap<>();
-
         for (ProHis program : programs) {
             Map<String, String> map = new HashMap<>();
             map.put("id", program.getId() + "");

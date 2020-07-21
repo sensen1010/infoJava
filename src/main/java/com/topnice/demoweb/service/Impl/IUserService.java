@@ -24,18 +24,12 @@ public class IUserService implements UsersService {
     UsersRepository userRepository;
 
     @Override
-    public String login(Users users) {
+    public Users login(Users users) {
         Users user = userRepository.findAllByUserNameAndPassword(users.getUserName(), users.getPassword());
-        List<Map<String, String>> list = new ArrayList<>();
         if (user == null) {
             return null;
         }
-        Map<String, String> map = new HashMap<>();
-        map.put("userId", user.getUserId());
-        map.put("type", user.getType());
-        map.put("enterId", user.getEnterId());
-        list.add(map);
-        return JSONObject.toJSONString(list);
+        return user;
     }
 
     @Override
