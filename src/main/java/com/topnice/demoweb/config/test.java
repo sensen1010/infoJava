@@ -53,7 +53,28 @@ public class test {
     }
 
     public static void main(String[] args) {
-        getLocalMac();
+
+        //getLocalMac();
+//        String[] imgName = {"jpg", "png", "mp4", "jpeg"};
+//        String data="mP4";
+////        data=data.m,ge.
+//        data=data.toLowerCase();
+//        boolean flag = Arrays.asList(imgName).contains(data);
+//        String filePath = "D:\\ce\\asd\\mp4";
+//        File targetFile = new File(filePath);
+//        if (!targetFile.exists()) {
+//            targetFile.mkdirs();
+//        }
+//        System.out.println(flag);
+
+
+        String upFileName = "asda.asdas.dasd.mp4";
+
+        int lastFile = upFileName.lastIndexOf(".");
+        System.out.println(lastFile);
+        String upFileType = upFileName.substring(lastFile + 1, upFileName.length());
+        System.out.println(upFileType);
+
     }
 
 }

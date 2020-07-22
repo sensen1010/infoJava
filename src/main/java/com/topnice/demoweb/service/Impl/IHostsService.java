@@ -23,17 +23,14 @@ public class IHostsService implements HostsService {
     @Autowired
     private HostsRepository hostsRepository;
 
-
     List<Map<String, Object>> lists;
     List<Map<String, String>> list;
     Map<String, Object> mapAll;
-
     /**
      * @desc: 添加主机
      * @author: sen
      * @date: 2020/6/19 0019 9:42
      **/
-
     @Override
     public Hosts add(String hostLinkId, String hostName, String enterId) {
         hostLinkId = hostLinkId == null || hostLinkId.equals("") ? "" : hostLinkId;
@@ -64,8 +61,6 @@ public class IHostsService implements HostsService {
         Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
         //如果为null默认为10
         Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
-
-
         return JSONObject.toJSONString(lists);
     }
 

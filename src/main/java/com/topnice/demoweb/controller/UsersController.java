@@ -38,20 +38,24 @@ public class UsersController {
         mmap = new HashMap<>();
         Users data = usersService.login(users);
         if (data == null) {
+            mmap.put("code", "1");
             mmap.put("msg", "登录失败,用户不存在");
             return mmap;
         } else {
             if (!data.getPassword().equals(users.getPassword())) {
+                mmap.put("code", "1");
                 mmap.put("msg", "登录失败,密码错误");
                 return mmap;
             } else {
                 String token = tokenService.getToken(data);
+                mmap.put("code", "0");
                 mmap.put("token", token);
                 Map<String, String> map = new HashMap<>();
                 map.put("name", data.getName());
                 map.put("enterId", data.getEnterId());
                 map.put("userName", data.getUserName());
                 map.put("userId", data.getUserId());
+                map.put("userType", data.getType());
                 mmap.put("data", JSONObject.toJSONString(map));
                 return mmap;
             }

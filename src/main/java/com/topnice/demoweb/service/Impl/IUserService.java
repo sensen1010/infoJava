@@ -43,6 +43,7 @@ public class IUserService implements UsersService {
         if (re != null) {
             return null;
         }
+        //设置类型
         users.setType("2");
         users.setCreationTime(new Date());
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
@@ -81,8 +82,8 @@ public class IUserService implements UsersService {
     }
 
     @Override
-    public Users findByName(String loginName) {
-        Users re = userRepository.findAllByName(loginName);
+    public Users findByUserNameAndEnterId(String userName, String enterId) {
+        Users re = userRepository.findAllByUserNameAndEnterId(userName, enterId);
         if (re != null) {
             return null;
         }
@@ -90,11 +91,14 @@ public class IUserService implements UsersService {
     }
 
     @Override
-    public Users findByUserNameAndEnterId(String userName, String enterId) {
-        Users re = userRepository.findAllByUserNameAndEnterId(userName, enterId);
-        if (re != null) {
+    public Users findByUserIdAndEnterId(String userId, String enterId) {
+
+
+        Users re = userRepository.findAllByUserIdAndEnterId(userId, enterId);
+        if (re == null) {
             return null;
         }
+
         return re;
     }
 }

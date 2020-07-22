@@ -4,6 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileUpService {
 
-    String add(MultipartFile[] reportFile, String userId);
+    String add(MultipartFile[] reportFile, String userId, String enreId);
 
 }

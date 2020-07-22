@@ -27,6 +27,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     UsersService usersService;
 
+    public static String token;
+
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
@@ -67,7 +69,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    throw new RuntimeException("401");
+                    throw new RuntimeException("token过期，请重新登录");
                 }
                 return true;
             }

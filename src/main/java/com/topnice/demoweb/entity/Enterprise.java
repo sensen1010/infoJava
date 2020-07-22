@@ -29,6 +29,9 @@ public class Enterprise implements Serializable {
     @ApiModelProperty(value = "企业名称")
     private String enterName;
 
+    @ApiModelProperty(value = "默认账号id")
+    private String defaultUserId;
+
     @ApiModelProperty(value = "主机数量")
     private String hostNum;
 
@@ -39,7 +42,7 @@ public class Enterprise implements Serializable {
     private Date creationTime;
 
     @ApiModelProperty(value = "状态 0可用 1禁用")
-    private int state;
+    private String state;
 
     @ApiModelProperty(value = "企业ip")
     private String enterIp;

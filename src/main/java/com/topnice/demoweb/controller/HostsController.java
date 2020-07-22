@@ -24,7 +24,6 @@ public class HostsController {
 
     private Map<String, Object> map;
 
-
     @ApiOperation(value = "/add", tags = "添加主机")
     @RequestMapping("/add")
     private Map<String, Object> addHosts(String hostLinkId, String hostName, String enterId) {

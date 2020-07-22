@@ -62,6 +62,9 @@ public class IEnterpriseService implements EnterpriseService {
         map.put("pow", re.getPassword());
         map.put("type", re.getType());
         list.add(map);
+        //更新保存默认账号id
+        reEnter.setDefaultUserId(re.getUserId());
+        enterRepository.saveAndFlush(reEnter);
         return JSONObject.toJSONString(list);
     }
 
@@ -123,7 +126,7 @@ public class IEnterpriseService implements EnterpriseService {
         if (enterprise == null) {
             return null;
         }
-        enterprise.setState(Integer.parseInt(state));
+        enterprise.setState(state);
         return enterRepository.saveAndFlush(enterprise);
     }
 }

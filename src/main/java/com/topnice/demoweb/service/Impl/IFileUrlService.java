@@ -43,8 +43,9 @@ public class IFileUrlService implements FileUrlService {
         return fileUrlRepository.saveAndFlush(fileUrl);
     }
 
+
     @Override
-    public String findByFileNameAndState(String fileName, String state, String page, String size) {
+    public String findByFileNameAndState(String enterid, String fileName, String state, String page, String size) {
         fileName = fileName == null || fileName.equals("") ? "" : fileName;
         state = state == null || state.equals("") ? "" : state;
         //如果为null默认为0
@@ -55,7 +56,7 @@ public class IFileUrlService implements FileUrlService {
         //PageRequest的对象构造函数有多个，page是页数，初始值是0，size是查询结果的条数，后两个参数参考Sort对象的构造方法
         // Pageable pageable = new PageRequest(page, size, Sort.Direction.DESC, "id");旧方法 已弃用
         Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "updateTime");
-        Page<FileUrl> reFileUrl = fileUrlRepository.findAllByFileNameContainingAndStateContaining(fileName, state, pageable);
+        Page<FileUrl> reFileUrl = fileUrlRepository.findAllByFileNameContainingAndStateContaining(enterid, fileName, state, pageable);
         List<Map<String, Object>> lists = new ArrayList<>();
         Map<String, Object> m1 = new HashMap<>();
         List<Map<String, String>> lists2 = new ArrayList<>();
@@ -64,7 +65,7 @@ public class IFileUrlService implements FileUrlService {
             m.put("id", fileUrl.getId() + "");
             m.put("imgName", fileUrl.getFileName() + "");
             m.put("imgUrlId", fileUrl.getFileUrlId() + "");
-            m.put("imgType", fileUrl.getImgType() + "");
+            m.put("imgType", fileUrl.getFileType() + "");
             m.put("imgUrl", fileUrl.getFileUrl() + "");
             m.put("imgMd5", fileUrl.getFileMd5() + "");
             m.put("state", fileUrl.getState() + "");
@@ -101,7 +102,7 @@ public class IFileUrlService implements FileUrlService {
             m.put("id", fileUrl.getId() + "");
             m.put("fileName", fileUrl.getFileName() + "");
             m.put("fileUrl", fileUrl.getFileUrl() + "");
-            m.put("fileType", fileUrl.getImgType() + "");
+            m.put("fileType", fileUrl.getFileType() + "");
             lists2.add(m);
         }
         m1.put("data", JSONObject.toJSONString(lists2));

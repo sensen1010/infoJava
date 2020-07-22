@@ -34,8 +34,8 @@ public class FileUrl {
     @ApiModelProperty(value = "文件Md5")
     private String fileMd5;
 
-    @ApiModelProperty(value = "图片类型")
-    private String imgType;
+    @ApiModelProperty(value = "文件类型")
+    private String fileType;
 
     @ApiModelProperty(value = "文件类型Id")
     private String fileTypeId;
@@ -43,7 +43,7 @@ public class FileUrl {
     @ApiModelProperty(value = "企业Id")
     private String enterId;
 
-    @ApiModelProperty(value = "图片状态 0为正常   1为禁用  2为删除")
+    @ApiModelProperty(value = "文件状态 0为正常  1为删除")
     private String state;
 
     @ApiModelProperty(value = "添加时间")

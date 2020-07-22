@@ -43,5 +43,4 @@ server:
     uri-encoding: UTF-8
 prop:
   upload-folder: E:\\imgfile\\
-  upload-news: E:\\newsImgfile\\
   file-host: http://192.168.1.52:8080/newfile

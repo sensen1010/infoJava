@@ -28,11 +28,17 @@ public interface FileUrlService {
     FileUrl modifyFileTime(FileUrl fileUrl);
 
     /**
-     * @desc: 根据图片名称、状态分页查询
+     * @desc: 管理员根据企业Id\图片名称、状态分页查询
      * @author: sen
      * @date: 2020/6/18 0018 9:24
      **/
-    String findByFileNameAndState(String fileName, String state, String page, String size);
+    String findByFileNameAndState(String enterId, String fileName, String state, String page, String size);
+    /**
+     * @desc: 根据企业id查询文件
+     * @author: sen
+     * @date: 2020/6/18 0018 9:24
+     **/
+    //String findByFileNameAndState( String state, String page, String size);
 
     /**
      * @desc: 查询为视频、图片

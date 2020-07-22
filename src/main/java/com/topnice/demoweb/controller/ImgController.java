@@ -48,7 +48,7 @@ public class ImgController {
     @RequestMapping("/fileList")
     private Map<String, Object> selectImgList(String enterId, String name, String state, String page, String size) {
         myMap = new HashMap<>();
-        myMap.put("data", fileUrlService.findByFileNameAndState(name, state, page, size));
+        myMap.put("data", fileUrlService.findByFileNameAndState(enterId, name, state, page, size));
         myMap.put("code", "0");
         return myMap;
     }
@@ -95,13 +95,18 @@ public class ImgController {
      * @author: sen
      * @date: 2020/6/18 0018 11:57
      **/
-    @ApiOperation(value = "/up", notes = "图片上传接口")
+    @ApiOperation(value = "/up", notes = "文件上传接口")
     @RequestMapping("/up")
-    public synchronized Map<String, Object> singleFileUpload(@RequestParam("file") MultipartFile[] reportFile, String userId) {
+    public synchronized Map<String, Object> singleFileUpload(@RequestParam("file") MultipartFile[] reportFile, String userId, String enterId) {
         myMap = new HashMap<>();
+        String re = fileUpService.add(reportFile, userId, enterId);
+        if (re == null) {
+            myMap.put("code", "1");
+            myMap.put("msg", "上传失败");
+            return myMap;
+        }
         myMap.put("code", "0");
-        myMap.put("noImgList", fileUpService.add(reportFile, userId));
-        System.out.println(myMap.toString());
+        myMap.put("noImgList", re);
         return myMap;
     }
 

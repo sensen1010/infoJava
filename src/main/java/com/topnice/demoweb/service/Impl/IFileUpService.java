@@ -25,8 +25,6 @@ public class IFileUpService implements FileUpService {
 
     @Value("${prop.upload-folder}")
     private String UPLOAD_FOLDER;
-    @Value("${prop.upload-news}")
-    private String UPLOAD_NEWS;
 
     @Autowired
     FileUrlService fileUrlService;
@@ -40,59 +38,71 @@ public class IFileUpService implements FileUpService {
     Map<String, Object> myMap;
 
     @Override
-    public String add(MultipartFile[] reportFile, String userId) {
-
-        Users users = usersService.findByUserId(userId);
+    public String add(MultipartFile[] reportFile, String enterId, String userId) {
+        //Users users = usersService.findByUserId(userId);
+        Users users = usersService.findByUserIdAndEnterId(userId, enterId);
         if (users == null) {
             return null;
         }
 
-        Enterprise enterprise = enterpriseService.findByEnterId(users.getEnterId());
+        Enterprise enterprise = enterpriseService.findByEnterId(enterId);
         if (enterprise == null) {
             return null;
         }
-
         List<Map<String, String>> list = new ArrayList<>();
         for (MultipartFile multipartFile : reportFile) {
             Map<String, String> m = new HashMap<>();
-            String[] fileType = multipartFile.getOriginalFilename().split("\\.");
-            String uuidImg = UUID.randomUUID().toString().replace("-", "");
-            String filePath = UPLOAD_FOLDER;
-            File targetFile = new File(filePath);
-            if (!targetFile.exists()) {
-                targetFile.mkdirs();
-            }
-            String Md5Name = null;
+            String fileMd5 = null;
             try {
-                Md5Name = FileUtil.fileToBetyArray(multipartFile.getInputStream());
-                System.out.println(Md5Name);
+                fileMd5 = FileUtil.fileToBetyArray(multipartFile.getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
                 //保存图片信息
                 //查询该图是否存在，若存在，则更新该图片修改日期
-                FileUrl reFileUrl = fileUrlService.findByFileMD5(Md5Name);
-                String fileName = Md5Name + "." + fileType[fileType.length - 1];
-                File oldFile = new File(filePath + fileName);
-                FileUrl fileUrl = new FileUrl();
+                FileUrl reFileUrl = fileUrlService.findByFileMD5(fileMd5);
                 if (reFileUrl == null || reFileUrl.equals("")) {
+                    //上传文件的名称
+                    String upFileName = multipartFile.getOriginalFilename();
+                    //截取末尾类型
+                    int lastFile = upFileName.lastIndexOf(".");
+                    String upFileType = upFileName.substring(lastFile + 1, upFileName.length());
+                    //判断文件归类
+                    String numFile = FileUtil.fileType(upFileType);
+                    if (numFile == null) {
+                        return null;
+                    }
+                    //判断存储位置
+                    String fileTypePath = FileUtil.fileTypePath(numFile);
+                    //新的存储位置
+                    String newFilePath = enterId + "/" + fileTypePath;
+                    //文件名
+                    String fileName = fileMd5 + "." + upFileType;
+                    String uuidFile = UUID.randomUUID().toString().replace("-", "");
+                    //设置文件路径，
+                    String filePath = UPLOAD_FOLDER + newFilePath;
+                    File targetFile = new File(filePath);
+                    if (!targetFile.exists()) {
+                        targetFile.mkdirs();
+                    }
+                    File oldFile = new File(filePath + fileName);
+                    FileUrl fileUrl = new FileUrl();
                     multipartFile.transferTo(oldFile);
                     //FileTypeJudge.isFileType(FileTypeJudge.getType(new FileInputStream(oldFile)));
-                    String[] imgName = {"jpg", "png", "mp4", "jpeg"};
                     fileUrl.setState("0");//显示状态 0为正常
-                    fileUrl.setImgType(fileType[fileType.length - 1]);
-                    fileUrl.setFileMd5(Md5Name);
+                    fileUrl.setFileType(upFileType);
+                    fileUrl.setFileMd5(fileMd5);
                     fileUrl.setFileName(multipartFile.getOriginalFilename());
-                    fileUrl.setFileUrl(fileName);
-                    fileUrl.setFileUrlId(uuidImg);
+                    fileUrl.setFileUrl(newFilePath + "/" + fileName);
+                    fileUrl.setFileUrlId(uuidFile);
                     fileUrl.setUpdateTime(new Date());
                     fileUrl.setCreationTime(new Date());
                     fileUrlService.add(fileUrl);
                 } else {
                     reFileUrl.setUpdateTime(new Date());
                     m.put("name", multipartFile.getOriginalFilename());
-                    m.put("md5", Md5Name);
+                    m.put("md5", fileMd5);
                     list.add(m);
                 }
             } catch (Exception e) {

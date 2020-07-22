@@ -19,7 +19,8 @@ public class GloablExceptionHandler {
             msg = "服务器出错";
         }
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", msg);
+        jsonObject.put("cord", "1");
+        jsonObject.put("msg", msg);
         return jsonObject;
     }
 }

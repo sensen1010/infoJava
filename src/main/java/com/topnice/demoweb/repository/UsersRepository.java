@@ -22,4 +22,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     Users findAllByUserNameAndEnterId(String userName, String enterId);
 
+    Users findAllByUserIdAndEnterId(String userId, String enterId);
+
+
 }

@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class FileUtil {
     public static String fileToBetyArray(InputStream fis) {
@@ -43,13 +44,44 @@ public class FileUtil {
 
     public static String fileMd5(InputStream inputStream) {
         try {
-
-
             return String.valueOf(DigestUtils.md5Digest(inputStream));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    /**
+     * @desc: 判断返回文件类型
+     * @author: sen
+     * @date: 2020/7/22 0022 10:24
+     **/
+
+    public static String fileType(String type) {
+        String[] imgName = {"jpg", "png", "jpeg"};
+        String[] wordName = {"xls", "xlsx", "doc", "docx", "ppt", "pptx"};
+        String[] videoName = {"mp4", "flv", "avi"};
+        String[] musicName = {"mp3"};
+        if (Arrays.asList(imgName).contains(type)) return "1";
+        else if (Arrays.asList(wordName).contains(type)) return "2";
+        else if (Arrays.asList(videoName).contains(type)) return "3";
+        else if (Arrays.asList(musicName).contains(type)) return "4";
+        return null;
+    }
+
+    public static String fileTypePath(String type) {
+        switch (type) {
+            case "1":
+                return "img";
+            case "2":
+                return "word";
+            case "3":
+                return "video";
+            case "4":
+                return "music";
+            default:
+                return null;
+        }
     }
 }
