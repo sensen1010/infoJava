@@ -20,9 +20,14 @@ public interface UsersService {
     Users add(Users users, String enterId);
 
     /**
-     * 根据企业id、登录名、分页查询数据
+     * 企业接口  根据企业id、登录名、分页查询数据
      */
-    String findByNameList(String enterId, String name, String page, String size);
+    String findByNameList(String enterId, String name, String state, String page, String size);
+
+    /**
+     * 超级管理员接口  根据企业id、登录名、分页查询数据
+     */
+    String adminFindByNameList(String enterId, String name, String state, String page, String size);
 
     /**
      * 根据账号、企业id查询是否存在

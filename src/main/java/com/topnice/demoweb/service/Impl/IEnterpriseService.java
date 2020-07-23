@@ -129,4 +129,22 @@ public class IEnterpriseService implements EnterpriseService {
         enterprise.setState(state);
         return enterRepository.saveAndFlush(enterprise);
     }
+
+    @Override
+    public String findEnterList(String state) {
+        state = state == null || state.equals("") ? "" : state;
+        List<Enterprise> enterprises = enterRepository.findAllByStateContaining(state);
+        List<Map<String, String>> list = new ArrayList<>();
+        Map<String, String> mm = new HashMap<>();
+        mm.put("enterId", "");
+        mm.put("enterName", "所有企业");
+        list.add(mm);
+        for (Enterprise enter : enterprises) {
+            Map<String, String> m = new HashMap<>();
+            m.put("enterId", enter.getEnterId());
+            m.put("enterName", enter.getEnterName());
+            list.add(m);
+        }
+        return JSONObject.toJSONString(list);
+    }
 }

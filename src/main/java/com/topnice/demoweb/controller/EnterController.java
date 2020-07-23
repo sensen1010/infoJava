@@ -42,6 +42,21 @@ public class EnterController {
     }
 
     @UserLoginToken
+    @ApiOperation(value = "/enter查询所有企业列表", tags = "根据名称,查询所有企业")
+    @RequestMapping(value = "/enter/list", method = RequestMethod.GET)
+    private Map<String, Object> selectEnterList(String state) {
+        String re = enterpriseService.findEnterList(state);
+        if (re == null) {
+            map.put("code", "1");
+            return map;
+        }
+        map = new HashMap<>();
+        map.put("code", "0");
+        map.put("data", re);
+        return map;
+    }
+
+    @UserLoginToken
     @ApiOperation(value = "/enter根据名称,查询所有企业", tags = "根据名称,查询所有企业")
     @RequestMapping(value = "/enter", method = RequestMethod.GET)
     private Map<String, Object> selectEnter(String state, String enterName, String page, String size) {

@@ -19,4 +19,7 @@ public interface EnterpriseService {
     //修改企业状态（删除）
     Enterprise modifyEnterState(String enterId, String state);
 
+    //查询企业列表
+    String findEnterList(String state);
+
 }

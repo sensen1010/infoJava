@@ -16,9 +16,15 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     Users findAllByUserId(String userId);
 
-    Page<Users> findAllByEnterIdAndNameContaining(String enterId, String name, Pageable pageable);
+    //根据企业id、账号名称（模糊）查询用户
+    Page<Users> findAllByEnterIdAndNameContainingAndState(String enterId, String name, String state, Pageable pageable);
+
+    //根据企业id（模糊）、账号名称（模糊）查询用户  超级管理员接口
+    Page<Users> findAllByEnterIdContainingAndNameContainingAndState(String enterId, String name, String state, Pageable pageable);
 
     Users findAllByName(String name);
+
+    Users findAllByUserName(String userName);
 
     Users findAllByUserNameAndEnterId(String userName, String enterId);
 

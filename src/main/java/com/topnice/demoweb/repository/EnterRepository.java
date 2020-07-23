@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 @Repository
@@ -18,5 +19,7 @@ public interface EnterRepository extends JpaRepository<Enterprise, Integer> {
     Page<Enterprise> findAllByStateContainingAndEnterNameContaining(String state, String enterName, Pageable pageable);
 
     Enterprise findAllByEnterId(String enterId);
+
+    List<Enterprise> findAllByStateContaining(String state);
 
 }

@@ -68,6 +68,13 @@ public class UsersController {
     public Map<String, String> add(Users users, String enterId) {
         mmap = new HashMap<>();
         Users users1 = usersService.add(users, enterId);
+        if (users1 == null) {
+            mmap.put("code", "1");
+            mmap.put("msg", "添加失败,账号已被占用");
+        } else {
+            mmap.put("code", "0");
+            mmap.put("msg", "添加成功");
+        }
         return mmap;
     }
 
@@ -89,12 +96,32 @@ public class UsersController {
     }
 
     @UserLoginToken
-    @ApiOperation(value = "select", notes = "企业管理员查询所有")
-    @RequestMapping("/select")
-    public Map<String, String> select(String enterId, String loginName, String page, String size) {
+    @ApiOperation(value = "企业超级管理员查询用户接口", notes = "查询用户接口")
+    @RequestMapping(value = "/enterUser", method = RequestMethod.GET)
+    public Map<String, String> UserSelect(String name, String enterId, String state, String page, String size) {
         mmap = new HashMap<>();
-        String users1 = usersService.findByNameList(enterId, loginName, page, size);
-        mmap.put("data", users1 + "");
+        String users1 = usersService.findByNameList(enterId, name, state, page, size);
+        if (users1 == null) {
+            mmap.put("code", "1");
+        } else {
+            mmap.put("code", "0");
+            mmap.put("data", users1 + "");
+        }
+        return mmap;
+    }
+
+    @UserLoginToken
+    @ApiOperation(value = "超级管理员查询", notes = "企业管理员查询所有")
+    @RequestMapping(value = "/adminUser", method = RequestMethod.GET)
+    public Map<String, String> select(String name, String enterId, String state, String page, String size) {
+        mmap = new HashMap<>();
+        String reuser = usersService.adminFindByNameList(enterId, name, state, page, size);
+        if (reuser == null) {
+            mmap.put("code", "1");
+        } else {
+            mmap.put("code", "0");
+            mmap.put("data", reuser + "");
+        }
         return mmap;
     }
 
