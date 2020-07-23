@@ -38,23 +38,22 @@ public class IFileUpService implements FileUpService {
     Map<String, Object> myMap;
 
     @Override
-    public String add(MultipartFile[] reportFile, String enterId, String userId) {
+    public String add(MultipartFile reportFile, String userId, String enterId) {
         //Users users = usersService.findByUserId(userId);
-        Users users = usersService.findByUserIdAndEnterId(userId, enterId);
+        Users users = usersService.findByUserId(userId);
         if (users == null) {
             return null;
         }
-
         Enterprise enterprise = enterpriseService.findByEnterId(enterId);
         if (enterprise == null) {
             return null;
         }
         List<Map<String, String>> list = new ArrayList<>();
-        for (MultipartFile multipartFile : reportFile) {
+
             Map<String, String> m = new HashMap<>();
             String fileMd5 = null;
             try {
-                fileMd5 = FileUtil.fileToBetyArray(multipartFile.getInputStream());
+                fileMd5 = FileUtil.fileToBetyArray(reportFile.getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,7 +63,7 @@ public class IFileUpService implements FileUpService {
                 FileUrl reFileUrl = fileUrlService.findByFileMD5(fileMd5);
                 if (reFileUrl == null || reFileUrl.equals("")) {
                     //上传文件的名称
-                    String upFileName = multipartFile.getOriginalFilename();
+                    String upFileName = reportFile.getOriginalFilename();
                     //截取末尾类型
                     int lastFile = upFileName.lastIndexOf(".");
                     String upFileType = upFileName.substring(lastFile + 1, upFileName.length());
@@ -76,7 +75,7 @@ public class IFileUpService implements FileUpService {
                     //判断存储位置
                     String fileTypePath = FileUtil.fileTypePath(numFile);
                     //新的存储位置
-                    String newFilePath = enterId + "/" + fileTypePath;
+                    String newFilePath = enterId + "/" + fileTypePath+"/";
                     //文件名
                     String fileName = fileMd5 + "." + upFileType;
                     String uuidFile = UUID.randomUUID().toString().replace("-", "");
@@ -88,12 +87,15 @@ public class IFileUpService implements FileUpService {
                     }
                     File oldFile = new File(filePath + fileName);
                     FileUrl fileUrl = new FileUrl();
-                    multipartFile.transferTo(oldFile);
+                    reportFile.transferTo(oldFile);
                     //FileTypeJudge.isFileType(FileTypeJudge.getType(new FileInputStream(oldFile)));
+                    //写入信息
+                    fileUrl.setFileTypeId(numFile);
+                    fileUrl.setEnterId(enterId);
                     fileUrl.setState("0");//显示状态 0为正常
                     fileUrl.setFileType(upFileType);
                     fileUrl.setFileMd5(fileMd5);
-                    fileUrl.setFileName(multipartFile.getOriginalFilename());
+                    fileUrl.setFileName(reportFile.getOriginalFilename());
                     fileUrl.setFileUrl(newFilePath + "/" + fileName);
                     fileUrl.setFileUrlId(uuidFile);
                     fileUrl.setUpdateTime(new Date());
@@ -101,7 +103,7 @@ public class IFileUpService implements FileUpService {
                     fileUrlService.add(fileUrl);
                 } else {
                     reFileUrl.setUpdateTime(new Date());
-                    m.put("name", multipartFile.getOriginalFilename());
+                    m.put("name", reportFile.getOriginalFilename());
                     m.put("md5", fileMd5);
                     list.add(m);
                 }
@@ -109,7 +111,7 @@ public class IFileUpService implements FileUpService {
                 e.printStackTrace();
                 return "";
             }
-        }
+
         return JSONObject.toJSONString(list);
     }
 

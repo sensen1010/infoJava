@@ -9,10 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +21,7 @@ import java.util.Map;
 @Api(value = "/file", tags = {"文件操作接口"})
 @RestController
 @RequestMapping("/file")
-public class ImgController {
+public class FileController {
     @Autowired
     HttpServletRequest request;
 
@@ -37,16 +34,30 @@ public class ImgController {
 
 
     Map<String, Object> myMap;
-    private Logger logger = LoggerFactory.getLogger(ImgController.class);
+    private Logger logger = LoggerFactory.getLogger(FileController.class);
 
     /**
      * @desc: 查询接口类
      * @author: sen
      * @date: 2020/6/18 0018 11:57
      **/
-    @ApiOperation(value = "/fileList", notes = "根据企业Id分页模糊查询图片列表：名称、状态、显示状态")
-    @RequestMapping("/fileList")
-    private Map<String, Object> selectImgList(String enterId, String name, String state, String page, String size) {
+    @ApiOperation(value = "企业管理员查询文件", notes = "根据企业Id分页模糊查询图片列表：名称、状态、显示状态")
+    @RequestMapping(value = "/fileList",method = RequestMethod.GET)
+    private Map<String, Object> selectImgList(String enterId,String name, String state, String page, String size) {
+        myMap = new HashMap<>();
+        myMap.put("data", fileUrlService.findByFileNameAndState(enterId, name, state, page, size));
+        myMap.put("code", "0");
+        return myMap;
+    }
+
+    /**
+     * @desc: 超级管理员查询
+     * @author: sen
+     * @date: 2020/7/23 0023 17:20
+     **/
+    @ApiOperation(value = "超级管理员查询所有文件", notes = "根据企业Id分页模糊查询图片列表：名称、状态、显示状态")
+    @RequestMapping(value = "/admin/fileList",method = RequestMethod.GET)
+    private Map<String, Object> selectImgList(String enterId,String userId,String name, String state, String page, String size) {
         myMap = new HashMap<>();
         myMap.put("data", fileUrlService.findByFileNameAndState(enterId, name, state, page, size));
         myMap.put("code", "0");
@@ -95,18 +106,18 @@ public class ImgController {
      * @author: sen
      * @date: 2020/6/18 0018 11:57
      **/
-    @ApiOperation(value = "/up", notes = "文件上传接口")
-    @RequestMapping("/up")
-    public synchronized Map<String, Object> singleFileUpload(@RequestParam("file") MultipartFile[] reportFile, String userId, String enterId) {
+    @ApiOperation(value = "文件上传", notes = "文件上传接口")
+    @RequestMapping(value = "/file", method = RequestMethod.POST)
+    public synchronized Map<String, Object> singleFileUpload(@RequestParam("file") MultipartFile reportFile, String userId, String enterId) {
         myMap = new HashMap<>();
         String re = fileUpService.add(reportFile, userId, enterId);
         if (re == null) {
             myMap.put("code", "1");
-            myMap.put("msg", "上传失败");
+            myMap.put("msg", reportFile.getOriginalFilename()+"上传失败");
             return myMap;
         }
         myMap.put("code", "0");
-        myMap.put("noImgList", re);
+        myMap.put("msg", "上传成功");
         return myMap;
     }
 
