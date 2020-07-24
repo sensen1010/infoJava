@@ -92,7 +92,9 @@ public class IFileUpService implements FileUpService {
                     //写入信息
                     fileUrl.setFileTypeId(numFile);
                     fileUrl.setEnterId(enterId);
+                    fileUrl.setUserId(userId);
                     fileUrl.setState("0");//显示状态 0为正常
+                    fileUrl.setFileSize(reportFile.getSize()+"");
                     fileUrl.setFileType(upFileType);
                     fileUrl.setFileMd5(fileMd5);
                     fileUrl.setFileName(reportFile.getOriginalFilename());

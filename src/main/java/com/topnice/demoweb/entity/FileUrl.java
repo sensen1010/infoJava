@@ -31,6 +31,9 @@ public class FileUrl {
     @ApiModelProperty(value = "文件链接地址")
     private String fileUrl;
 
+    @ApiModelProperty(value = "文件大小")
+    private String fileSize;
+
     @ApiModelProperty(value = "文件Md5")
     private String fileMd5;
 
@@ -40,8 +43,14 @@ public class FileUrl {
     @ApiModelProperty(value = "文件类型Id")
     private String fileTypeId;
 
+    @ApiModelProperty(value = "显示类型 0全部  1为企业")
+    private String showFileType;
+
     @ApiModelProperty(value = "企业Id")
     private String enterId;
+
+    @ApiModelProperty(value = "用户Id")
+    private String userId;
 
     @ApiModelProperty(value = "文件状态 0为正常  1为删除")
     private String state;

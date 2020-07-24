@@ -39,7 +39,6 @@ public class HostsController {
         map.put("data", hosts);
         return map;
     }
-
     @ApiOperation(value = "/select", tags = "超级管理员查询所有主机列表")
     @RequestMapping("/select")
     private Map<String, Object> selectHosts(String hostName, String hostState, String linkState, String page, String size) {
@@ -49,7 +48,6 @@ public class HostsController {
         map.put("data", data + "");
         return map;
     }
-
     @ApiOperation(value = "/selectId", tags = "企业管理员根据连接Id查询主机列表")
     @RequestMapping("/selectId")
     private Map<String, Object> selectHostId(String linkId) {
@@ -61,13 +59,11 @@ public class HostsController {
             map.put("msg", "无数据");
             return map;
         }
-
         map.put("code", "0");
         map.put("msg", "查询成功");
         map.put("hostId", all.getHostId());
         return map;
     }
-
     @ApiOperation(value = "/userSelect", tags = "企业管理员查询主机列表")
     @RequestMapping("/userSelect")
     private Map<String, Object> userSelectHosts(String enterId, String state, String page, String size) {
@@ -83,7 +79,6 @@ public class HostsController {
         map.put("data", all);
         return map;
     }
-
     @ApiOperation(value = "/update/", tags = "修改主机")
     @RequestMapping("/update/name")
     private Map<String, Object> updateHostsName(String hostId, String hostName) {
@@ -91,7 +86,6 @@ public class HostsController {
         Hosts hosts = hostsService.modifyHostName(hostId, hostName);
         return mapMsg(hosts);
     }
-
     @ApiOperation(value = "/update/", tags = "修改主机")
     @RequestMapping("/update/state")
     private Map<String, Object> updateHostsState(String hostId, String state) {
@@ -99,7 +93,6 @@ public class HostsController {
         Hosts hosts = hostsService.modifyHostState(hostId, state);
         return mapMsg(hosts);
     }
-
     Map<String, Object> mapMsg(Hosts hosts) {
         if (hosts == null) {
             map.put("code", "1");
