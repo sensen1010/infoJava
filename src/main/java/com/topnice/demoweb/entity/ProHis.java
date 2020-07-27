@@ -28,20 +28,23 @@ public class ProHis implements Serializable {
 
     private String name;//节目名称
 
+    private String enterId;//企业id
+
     private String userId;//发布人id
 
-    private String layoutId;//布局id
+    private String layoutType;//布局类型
 
-    private String content;//布局  {1:{},2{},3{},4{}}
-
-    private String horseLamp;//0 不开启  1开启
-
-    private String horseText;//跑马灯内容{1:{}，2:{}}
-
+    private String content;//布局内容
 
     private String type;//发布类型  0全部  1部分
 
     private String showType;//显示类型  0开机自动显示，1开机不显示
+
+    private String startTime;//开启时间、结束时间
+
+    private String week;//星期
+
+    private String weight;//权重
 
     private Date creationTime;
 

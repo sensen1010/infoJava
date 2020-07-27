@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/imserver/{userId}/{name}")
+@ServerEndpoint("/imserver/{enterId}/{userId}/{name}")
 @Component
 public class WebSocketServer {
     private static Logger log = LoggerFactory.getLogger(WebSocketServer.class);
@@ -57,7 +57,7 @@ public class WebSocketServer {
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public synchronized void onOpen(Session session, @PathParam("userId") String userId, @PathParam("name") String name) {
+    public synchronized void onOpen(Session session, @PathParam("enterId") String enterId, @PathParam("userId") String userId, @PathParam("name") String name) {
         if (name == null) {
             name = "未知主机";
         }

@@ -77,9 +77,10 @@ public class IFileUrlService implements FileUrlService {
     }
 
     @Override
-    public String adminFindByFileNameAndStateAndType(String enterId, String fileName,String fileType ,String state, String page, String size) {
+    public String adminFindByFileNameAndStateAndType(String enterId, String fileName, String fileTypeId, String state, String page, String size) {
+        enterId = enterId == null || enterId.equals("") ? "" : enterId;
         fileName = fileName == null || fileName.equals("") ? "" : fileName;
-        fileType = fileType == null || fileType.equals("") ? "" : fileType;
+        fileTypeId = fileTypeId == null || fileTypeId.equals("") ? "" : fileTypeId;
         state = state == null || state.equals("") ? "0" : state;
         //如果为null默认为0
         Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
@@ -89,7 +90,9 @@ public class IFileUrlService implements FileUrlService {
         //PageRequest的对象构造函数有多个，page是页数，初始值是0，size是查询结果的条数，后两个参数参考Sort对象的构造方法
         // Pageable pageable = new PageRequest(page, size, Sort.Direction.DESC, "id");旧方法 已弃用
         Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "updateTime");
-        Page<FileUrl> reFileUrl = fileUrlRepository.findAllByEnterIdContainingAndFileNameContainingAndFileTypeContainingAndStateContaining(enterId, fileName,fileType,state, pageable);
+
+        Page<FileUrl> reFileUrl = fileUrlRepository.findAllByEnterIdContainingAndFileNameContainingAndFileTypeIdContainingAndStateContaining(enterId, fileName, fileTypeId, state, pageable);
+
         List<Map<String, Object>> lists = new ArrayList<>();
         Map<String, Object> m1 = new HashMap<>();
         m1.put("data",allFile(reFileUrl));
@@ -100,25 +103,34 @@ public class IFileUrlService implements FileUrlService {
 
     String  allFile( Page<FileUrl> all){
         List<Map<String, String>> lists = new ArrayList<>();
-        for (FileUrl fileUrl : all) {
-            Map<String, String> m = new HashMap<>();
-            m.put("id", fileUrl.getId() + "");
-            m.put("fileName", fileUrl.getFileName() + "");
-            m.put("fileUrlId", fileUrl.getFileUrlId() + "");
-            m.put("fileType", fileUrl.getFileType() + "");
-            Enterprise enterprise=enterpriseService.findByEnterId(fileUrl.getEnterId());
-            m.put("enterName",enterprise.getEnterName()+ "");
-            Users users=usersService.findByUserId(fileUrl.getUserId());
-            m.put("userName",users.getUserName());
-            m.put("fileSize",FileUtil.getSize(Integer.parseInt(fileUrl.getFileSize())));
-            m.put("fileUrl", fileUrl.getFileUrl() + "");
-            m.put("fileMd5", fileUrl.getFileMd5() + "");
-            m.put("state", fileUrl.getState() + "");
-            m.put("creationTime", DateUtil.date2TimeStamp(fileUrl.getCreationTime(), "yyyy-MM-dd HH:mm:ss") + "");
-            m.put("deleteTime", DateUtil.date2TimeStamp(fileUrl.getDeleteTime(), "yyyy-MM-dd HH:mm:ss") + "");
-            m.put("updateTime", DateUtil.date2TimeStamp(fileUrl.getUpdateTime(), "yyyy-MM-dd HH:mm:ss") + "");
-            lists.add(m);
+        try {
+
+            for (FileUrl fileUrl : all) {
+                Map<String, String> m = new HashMap<>();
+                m.put("id", fileUrl.getId() + "");
+                m.put("fileName", fileUrl.getFileName() + "");
+                m.put("fileUrlId", fileUrl.getFileUrlId() + "");
+                m.put("fileType", fileUrl.getFileType() + "");
+                m.put("fileTypeId", fileUrl.getFileTypeId() + "");
+                Enterprise enterprise = enterpriseService.findByEnterId(fileUrl.getEnterId());
+                m.put("enterName", enterprise.getEnterName() + "");
+                Users users = usersService.findByUserId(fileUrl.getUserId());
+                m.put("userName", users.getUserName());
+                if (fileUrl.getFileSize() != null) {
+                    m.put("fileSize", FileUtil.getSize(Integer.parseInt(fileUrl.getFileSize())));
+                }
+                m.put("fileUrl", fileUrl.getFileUrl() + "");
+                m.put("fileMd5", fileUrl.getFileMd5() + "");
+                m.put("state", fileUrl.getState() + "");
+                m.put("creationTime", DateUtil.date2TimeStamp(fileUrl.getCreationTime(), "yyyy-MM-dd HH:mm:ss") + "");
+                m.put("deleteTime", DateUtil.date2TimeStamp(fileUrl.getDeleteTime(), "yyyy-MM-dd HH:mm:ss") + "");
+                m.put("updateTime", DateUtil.date2TimeStamp(fileUrl.getUpdateTime(), "yyyy-MM-dd HH:mm:ss") + "");
+                lists.add(m);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return JSONObject.toJSONString(lists);
     }
 

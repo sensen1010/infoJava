@@ -18,7 +18,7 @@ public interface FileUrlRepository extends JpaRepository<FileUrl, Integer> {
 
     Page<FileUrl> findAllByEnterIdAndFileNameContainingAndFileTypeContainingAndStateContaining(String enterId, String fileName,String fileType ,String state, Pageable pageable);
 
-    Page<FileUrl> findAllByEnterIdContainingAndFileNameContainingAndFileTypeContainingAndStateContaining(String enterId, String fileName, String fileType,String state, Pageable pageable);
+    Page<FileUrl> findAllByEnterIdContainingAndFileNameContainingAndFileTypeIdContainingAndStateContaining(String enterId, String fileName, String fileTypeId, String state, Pageable pageable);
 
 
     List<FileUrl> findAllByStateContaining(String state);

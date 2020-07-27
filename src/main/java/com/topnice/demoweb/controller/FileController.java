@@ -67,7 +67,6 @@ public class FileController {
             myMap.put("code", "1");
         return myMap;
         }
-         users.getType();
         myMap.put("data", fileUrlService.adminFindByFileNameAndStateAndType(enterId,name,fileType,state,page,size));
         myMap.put("code", "0");
         return myMap;

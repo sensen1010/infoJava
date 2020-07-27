@@ -28,15 +28,13 @@ public class Program implements Serializable {
 
     private String name;//名称
 
+    private String enterId;//企业id
+
     private String userId;//发布人id
 
-    private String layoutId;//布局id
+    private String layoutType;//布局类型
 
-    private String content;//布局  {1:{},2{},3{},4{}}
-
-    private String horseLamp;//0 不开启  1开启
-
-    private String horseText;//跑马灯内容{1:{}，2:{}}
+    private String content;//布局内容  {1:{},2{},3{},4{}}
 
     private Date creationTime;
 

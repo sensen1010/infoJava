@@ -26,7 +26,7 @@ public class HostsController {
 
     @ApiOperation(value = "/add", tags = "添加主机")
     @RequestMapping("/add")
-    private Map<String, Object> addHosts(String hostLinkId, String hostName, String enterId) {
+    private Map<String, Object> addHosts(String hostLinkId, String hostName, String enterId, String userId) {
         map = new HashMap<>();
         Hosts hosts = hostsService.add(hostLinkId, hostName, enterId);
         if (hosts == null) {
