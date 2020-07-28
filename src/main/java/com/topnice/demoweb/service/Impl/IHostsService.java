@@ -128,8 +128,6 @@ public class IHostsService implements HostsService {
 
     @Override
     public Hosts findHostId(String hostLinkId) {
-        System.out.println("进入查询界面：");
-
         return hostsRepository.findAllByHostLinkId(hostLinkId);
     }
 

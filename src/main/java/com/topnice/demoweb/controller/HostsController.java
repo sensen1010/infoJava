@@ -53,14 +53,11 @@ public class HostsController {
     private Map<String, Object> selectHostId(String linkId) {
         map = new HashMap<>();
         Hosts all = hostsService.findHostId(linkId);
-        System.out.println("进入查询");
         if (all == null) {
             map.put("code", "1");
-            map.put("msg", "无数据");
             return map;
         }
         map.put("code", "0");
-        map.put("msg", "查询成功");
         map.put("hostId", all.getHostId());
         return map;
     }
@@ -71,11 +68,9 @@ public class HostsController {
         String all = hostsService.findHost(enterId, state, page, size);
         if (all.equals("1")) {
             map.put("code", "1");
-            map.put("msg", "无数据");
             return map;
         }
         map.put("code", "0");
-        map.put("msg", "查询成功");
         map.put("data", all);
         return map;
     }
@@ -96,11 +91,9 @@ public class HostsController {
     Map<String, Object> mapMsg(Hosts hosts) {
         if (hosts == null) {
             map.put("code", "1");
-            map.put("msg", "修改失败");
             return map;
         } else {
             map.put("code", "0");
-            map.put("msg", "修改成功");
             map.put("data", hosts);
         }
         return map;

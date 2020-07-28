@@ -32,11 +32,9 @@ public class EnterController {
         String enter = enterpriseService.add(enterprise);
         if (enter == null) {
             map.put("code", "1");
-            map.put("msg", "添加失败");
             return map;
         }
         map.put("code", "0");
-        map.put("msg", "添加成功");
         map.put("data", enter);
         return map;
     }
@@ -79,11 +77,9 @@ public class EnterController {
         Enterprise re = enterpriseService.findByEnterId(enterId);
         if (re == null) {
             map.put("cord", "1");
-            map.put("msg", "查询失败");
             return map;
         }
         map.put("code", "0");
-        map.put("msg", "查询成功");
         map.put("data", JSONObject.toJSONString(re) + "");
         return map;
     }
@@ -97,11 +93,9 @@ public class EnterController {
         Enterprise re = enterpriseService.modifyEnterState(enterId, state);
         if (re == null) {
             map.put("cord", "1");
-            map.put("msg", "操作失败");
             return map;
         }
         map.put("code", "0");
-        map.put("msg", "成功");
         return map;
     }
 

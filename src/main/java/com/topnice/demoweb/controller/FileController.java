@@ -96,12 +96,10 @@ public class FileController {
         FileUrl fileUrl = fileUrlService.findByFileUrlId(fileUrlId);
         if (fileUrl == null || fileUrl.equals("")) {
             myMap.put("code", "1");
-            myMap.put("msg", "文件不存在");
         } else {
             fileUrl.setState(state);
             fileUrlService.modifyFileTime(fileUrl);
             myMap.put("code", "0");
-            myMap.put("msg", "修改成功");
         }
         return myMap;
     }
@@ -117,11 +115,10 @@ public class FileController {
         String re = fileUpService.add(reportFile, userId, enterId);
         if (re == null) {
             myMap.put("code", "1");
-            myMap.put("msg", reportFile.getOriginalFilename()+"上传失败");
+            myMap.put("msg", reportFile.getOriginalFilename());
             return myMap;
         }
         myMap.put("code", "0");
-        myMap.put("msg", "上传成功");
         return myMap;
     }
 }

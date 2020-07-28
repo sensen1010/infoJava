@@ -24,7 +24,6 @@ public class TokenController {
     public Map<String, String> token() {
         Map<String, String> map = new HashMap<>();
         map.put("code", "0");
-        map.put("msg", "token有效");
         return map;
     }
 

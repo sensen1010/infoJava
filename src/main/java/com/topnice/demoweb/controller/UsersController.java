@@ -39,12 +39,10 @@ public class UsersController {
         Users data = usersService.login(users);
         if (data == null) {
             mmap.put("code", "1");
-            mmap.put("msg", "登录失败,用户不存在");
             return mmap;
         } else {
             if (!data.getPassword().equals(users.getPassword())) {
                 mmap.put("code", "1");
-                mmap.put("msg", "登录失败,密码错误");
                 return mmap;
             } else {
                 String token = tokenService.getToken(data);
@@ -70,10 +68,8 @@ public class UsersController {
         Users users1 = usersService.add(users, enterId);
         if (users1 == null) {
             mmap.put("code", "1");
-            mmap.put("msg", "添加失败,账号已被占用");
         } else {
             mmap.put("code", "0");
-            mmap.put("msg", "添加成功");
         }
         return mmap;
     }
@@ -86,10 +82,8 @@ public class UsersController {
         Users users1 = usersService.add(users, enterId);
         if (users1 == null) {
             mmap.put("code", "1");
-            mmap.put("msg", "添加失败");
         } else {
             mmap.put("code", "0");
-            mmap.put("msg", "添加成功");
             mmap.put("data", users1 + "");
         }
         return mmap;

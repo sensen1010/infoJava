@@ -29,12 +29,6 @@ public class IProgramService implements ProgramService {
     @Override
     public Program add(Program program) {
 
-        if (program.getHorseLamp().equals("1")) {
-            if (program.getHorseText() != null && !program.equals("")) {
-                String a = program.getHorseText().replace("[", "").replace("]", "");
-                program.setHorseText(a);
-            }
-        }
         program.setCreationTime(new Date());
         program.setProId(UUID.randomUUID().toString().replace("-", ""));
         return programRepository.save(program);
@@ -61,9 +55,6 @@ public class IProgramService implements ProgramService {
             map.put("proId", program.getProId());
             map.put("name", program.getName());
             map.put("content", program.getContent());
-            map.put("horseText", program.getHorseText());
-            map.put("horseLamp", program.getHorseLamp());
-            map.put("layoutId", program.getLayoutId());
             map.put("userId", program.getUserId());
             // map.put("set",program.getProHis()+"");
             map.put("creationTime", DateUtil.date2TimeStamp(program.getCreationTime(), "yyyy-MM-dd HH:mm"));

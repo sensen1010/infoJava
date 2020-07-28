@@ -46,10 +46,8 @@ public class IProHisService implements ProHisService {
         //设置信息
         proHis.setName(program.getName());
         proHis.setUserId("");
-        proHis.setLayoutId(program.getLayoutId());
+
         proHis.setContent(program.getContent());
-        proHis.setHorseLamp(program.getHorseLamp());
-        proHis.setHorseText(program.getHorseText());
 
         ProHis reprohis = proHisRepository.save(proHis);
         return reprohis;
@@ -73,9 +71,6 @@ public class IProHisService implements ProHisService {
             map.put("id", program.getId() + "");
             map.put("name", program.getName());
             map.put("content", program.getContent());
-            map.put("layoutId", program.getLayoutId());
-            map.put("horseLamp", program.getHorseLamp());
-            map.put("horseText", program.getHorseText());
             map.put("proHisId", program.getProHisId());
             map.put("creationTime", DateUtil.date2TimeStamp(program.getCreationTime(), "yyyy-MM-dd HH:mm"));
             map.put("type", program.getType());//0 全部  1部分
