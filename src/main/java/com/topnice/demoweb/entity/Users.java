@@ -22,7 +22,7 @@ public class Users implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "id", hidden = true)
     @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
+    private int id;
 
     @ApiModelProperty(value = "用户UUIDid")
     private String userId;

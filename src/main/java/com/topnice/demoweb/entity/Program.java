@@ -22,7 +22,7 @@ public class Program implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
+    private int id;
 
     private String proId;
 

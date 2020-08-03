@@ -20,7 +20,7 @@ public class FileType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "id", hidden = true)
     @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
+    private int id;
 
     private String name;
 

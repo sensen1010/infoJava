@@ -12,11 +12,11 @@ import javax.persistence.*;
 @Entity
 public class programProHis {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id", unique = true, nullable = false)
+//    private int id;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
-
     private String proId;
 
     private String proHisId;

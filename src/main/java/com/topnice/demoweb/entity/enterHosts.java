@@ -13,10 +13,9 @@ import javax.persistence.*;
 public class enterHosts {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
-
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id", unique = true, nullable = false)
+//    private int id;
     private String enterId;
 
     private String hostId;
