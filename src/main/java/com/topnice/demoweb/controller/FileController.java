@@ -46,9 +46,9 @@ public class FileController {
      **/
     @ApiOperation(value = "企业管理员查询文件", notes = "根据企业Id分页模糊查询图片列表：名称、状态、显示状态")
     @RequestMapping(value = "/fileList",method = RequestMethod.GET)
-    private Map<String, Object> selectFileList(String enterId,String userId,String name,String fileType ,String state, String page, String size) {
+    private Map<String, Object> selectFileList(String enterId, String userId, String name, String fileTypeId, String state, String page, String size) {
         myMap = new HashMap<>();
-        myMap.put("data", fileUrlService.findByFileNameAndStateAndType(enterId, name, fileType, state, page, size));
+        myMap.put("data", fileUrlService.findByFileNameAndStateAndType(enterId, name, fileTypeId, state, page, size));
         myMap.put("code", "0");
         return myMap;
     }
@@ -59,15 +59,15 @@ public class FileController {
      **/
     @ApiOperation(value = "超级管理员查询所有文件", notes = "根据企业Id分页模糊查询图片列表：名称、状态、显示状态")
     @RequestMapping(value = "/admin/fileList",method = RequestMethod.GET)
-    private Map<String, Object> adminSelectFileList(String enterId,String userId,String name, String fileType ,String state, String page, String size) {
+    private Map<String, Object> adminSelectFileList(String enterId, String userId, String name, String fileTypeId, String state, String page, String size) {
         myMap = new HashMap<>();
         //判断用户类型
         Users users=usersService.findByUserId(userId);
         if (users==null||!users.getType().equals("0")){
             myMap.put("code", "1");
-        return myMap;
+            return myMap;
         }
-        myMap.put("data", fileUrlService.adminFindByFileNameAndStateAndType(enterId,name,fileType,state,page,size));
+        myMap.put("data", fileUrlService.adminFindByFileNameAndStateAndType(enterId, name, fileTypeId, state, page, size));
         myMap.put("code", "0");
         return myMap;
     }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,14 @@ public class ProgramController {
 
     Map<String, String> map;
 
+
+    @ApiOperation(value = "/add", notes = "添加节目")
+    @RequestMapping("/add")
+    private Map<String, String> addProgram1(String[] contex) {
+        map = new HashMap<>();
+        System.out.println(Arrays.toString(contex));
+        return map;
+    }
 
     @ApiOperation(value = "/pro/add", notes = "添加节目")
     @RequestMapping("/pro/add")

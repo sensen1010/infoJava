@@ -20,7 +20,6 @@ public class WebSocketUtil {
         InetSocketAddress addr = (InetSocketAddress) getFieldInstance(async, "base#socketWrapper#socket#sc#remoteAddress");
         return addr;
     }
-
     private static Object getFieldInstance(Object obj, String fieldPath) {
         String fields[] = fieldPath.split("#");
         for (String field : fields) {
@@ -29,10 +28,8 @@ public class WebSocketUtil {
                 return null;
             }
         }
-
         return obj;
     }
-
     private static Object getField(Object obj, Class<?> clazz, String fieldName) {
         for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
             try {

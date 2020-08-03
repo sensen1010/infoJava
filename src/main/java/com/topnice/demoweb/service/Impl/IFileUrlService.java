@@ -56,9 +56,9 @@ public class IFileUrlService implements FileUrlService {
 
 
     @Override
-    public String findByFileNameAndStateAndType(String enterId, String fileName,String fileType,String state, String page, String size) {
+    public String findByFileNameAndStateAndType(String enterId, String fileName, String fileTypeId, String state, String page, String size) {
         fileName = fileName == null || fileName.equals("") ? "" : fileName;
-        fileType = fileType == null || fileType.equals("") ? "" : fileType;
+        fileTypeId = fileTypeId == null || fileTypeId.equals("") ? "" : fileTypeId;
         state = state == null || state.equals("") ? "0" : state;
 
         //如果为null默认为0
@@ -67,7 +67,7 @@ public class IFileUrlService implements FileUrlService {
         Integer rsize = size == null || size.equals("") ? 32 : Integer.parseInt(size);
         Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "updateTime");
 
-        Page<FileUrl> reFileUrl = fileUrlRepository.findAllByEnterIdAndFileNameContainingAndFileTypeContainingAndStateContaining(enterId, fileName,fileType ,state, pageable);
+        Page<FileUrl> reFileUrl = fileUrlRepository.findAllByEnterIdAndFileNameContainingAndFileTypeIdContainingAndStateContaining(enterId, fileName, fileTypeId, state, pageable);
         List<Map<String, Object>> lists = new ArrayList<>();
         Map<String, Object> m1 = new HashMap<>();
         m1.put("data", allFile(reFileUrl));
@@ -118,6 +118,9 @@ public class IFileUrlService implements FileUrlService {
                 m.put("userName", users.getUserName());
                 if (fileUrl.getFileSize() != null) {
                     m.put("fileSize", FileUtil.getSize(Integer.parseInt(fileUrl.getFileSize())));
+                }
+                if (fileUrl.getFileTypeId().equals("3")) {
+                    m.put("videoImg", fileUrl.getVideoImg() + "");
                 }
                 m.put("fileUrl", fileUrl.getFileUrl() + "");
                 m.put("fileMd5", fileUrl.getFileMd5() + "");

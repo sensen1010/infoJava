@@ -62,6 +62,7 @@ public class WebSocketServer {
             name = "未知主机";
         }
         System.out.println("获取到地址" + WebSocketUtil.getRemoteAddress(session));
+        System.out.println(enterId + "#######" + userId + "##########" + name);
         try {
             this.name = URLDecoder.decode(name, "utf-8");
             name = this.name;

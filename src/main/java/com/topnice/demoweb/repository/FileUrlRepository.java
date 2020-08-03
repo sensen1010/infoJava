@@ -16,7 +16,7 @@ public interface FileUrlRepository extends JpaRepository<FileUrl, Integer> {
 
     FileUrl findAllByFileMd5(String imgMd5);
 
-    Page<FileUrl> findAllByEnterIdAndFileNameContainingAndFileTypeContainingAndStateContaining(String enterId, String fileName,String fileType ,String state, Pageable pageable);
+    Page<FileUrl> findAllByEnterIdAndFileNameContainingAndFileTypeIdContainingAndStateContaining(String enterId, String fileName, String fileTypeId, String state, Pageable pageable);
 
     Page<FileUrl> findAllByEnterIdContainingAndFileNameContainingAndFileTypeIdContainingAndStateContaining(String enterId, String fileName, String fileTypeId, String state, Pageable pageable);
 

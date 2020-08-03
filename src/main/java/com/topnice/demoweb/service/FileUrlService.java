@@ -32,14 +32,14 @@ public interface FileUrlService {
      * @author: sen
      * @date: 2020/6/18 0018 9:24
      **/
-    String findByFileNameAndStateAndType(String enterId, String fileName,String fileType ,String state, String page, String size);
+    String findByFileNameAndStateAndType(String enterId, String fileName, String fileTypeId, String state, String page, String size);
 
     /**
      * @desc: 超级管理员根据企业Id\图片名称、状态分页查询
      * @author: sen
      * @date: 2020/6/18 0018 9:24
      **/
-    String adminFindByFileNameAndStateAndType(String enterId, String fileName,String fileType,String state, String page, String size);
+    String adminFindByFileNameAndStateAndType(String enterId, String fileName, String fileTypeId, String state, String page, String size);
 
 
 

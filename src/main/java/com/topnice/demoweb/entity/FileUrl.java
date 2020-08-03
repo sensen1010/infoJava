@@ -43,6 +43,9 @@ public class FileUrl {
     @ApiModelProperty(value = "文件类型Id")
     private String fileTypeId;
 
+    @ApiModelProperty(value = "视频封面")
+    private String videoImg;
+
     @ApiModelProperty(value = "显示类型 0全部  1为企业")
     private String showFileType;
 

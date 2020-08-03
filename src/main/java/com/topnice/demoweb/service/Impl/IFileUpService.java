@@ -89,12 +89,16 @@ public class IFileUpService implements FileUpService {
                     FileUrl fileUrl = new FileUrl();
                     reportFile.transferTo(oldFile);
                     //FileTypeJudge.isFileType(FileTypeJudge.getType(new FileInputStream(oldFile)));
+                    if (numFile.equals("3")) {
+                        FileUtil.getTempPath(filePath + "/img/" + fileMd5 + ".jpg", filePath + fileName);
+                    }
                     //写入信息
                     fileUrl.setFileTypeId(numFile);
                     fileUrl.setEnterId(enterId);
                     fileUrl.setUserId(userId);
                     fileUrl.setState("0");//显示状态 0为正常
                     fileUrl.setFileSize(reportFile.getSize()+"");
+                    fileUrl.setVideoImg(newFilePath + "/img/" + fileMd5 + ".jpg");
                     fileUrl.setFileType(upFileType);
                     fileUrl.setFileMd5(fileMd5);
                     fileUrl.setFileName(reportFile.getOriginalFilename());
