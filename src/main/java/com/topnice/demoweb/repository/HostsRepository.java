@@ -24,4 +24,5 @@ public interface HostsRepository extends JpaRepository<Hosts, Integer> {
 
     Hosts findAllByHostLinkId(String hostLinkId);
 
+
 }

@@ -1,6 +1,7 @@
 package com.topnice.demoweb.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.topnice.demoweb.util.WebSocketUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -14,11 +15,13 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/imserver/{enterId}/{userId}/{name}")
+@ServerEndpoint("/imserver/{enterId}/{linkId}/{name}")
 @Component
 public class WebSocketServer {
     private static Logger log = LoggerFactory.getLogger(WebSocketServer.class);
@@ -29,15 +32,26 @@ public class WebSocketServer {
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
      */
-    private static ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
+//    private static ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
+    /**
+     * concurrent包的线程安全Set，这个用来存放每个企业的ConcurrentHashMap数据。
+     */
+    private static ConcurrentHashMap<String, ConcurrentHashMap<String, WebSocketServer>> enterMap = new ConcurrentHashMap<>();
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
     /**
+     * 接收enterId
+     */
+    private String enterId = "";
+    /**
+     * 用户名称
+     **/
+    /**
      * 接收userId
      */
-    private String userId = "";
+    private String linkId = "";
     /**
      * 用户名称
      **/
@@ -57,12 +71,12 @@ public class WebSocketServer {
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public synchronized void onOpen(Session session, @PathParam("enterId") String enterId, @PathParam("userId") String userId, @PathParam("name") String name) {
+    public synchronized void onOpen(Session session, @PathParam("enterId") String enterId, @PathParam("linkId") String linkId, @PathParam("name") String name) {
         if (name == null) {
             name = "未知主机";
         }
         System.out.println("获取到地址" + WebSocketUtil.getRemoteAddress(session));
-        System.out.println(enterId + "#######" + userId + "##########" + name);
+        System.out.println(enterId + "#######" + linkId + "##########" + name);
         try {
             this.name = URLDecoder.decode(name, "utf-8");
             name = this.name;
@@ -70,19 +84,40 @@ public class WebSocketServer {
             e.printStackTrace();
         }
         this.session = session;
-
-        this.userId = userId;
-        if (webSocketMap.containsKey(userId)) {
-            webSocketMap.remove(userId);
-            webSocketMap.put(userId, this);
-            //加入set中
+        this.linkId = linkId;
+        this.enterId = enterId;
+        //判断是否存在企业主机列表
+        ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
+        if (enterMap.containsKey(enterId)) {
+            //获取企业下所有主机
+            ConcurrentHashMap<String, WebSocketServer> linkMap = enterMap.get(enterId);
+            //存在，删除在添加
+            if (linkMap.containsKey(linkId)) {
+                linkMap.remove(linkId);
+                linkMap.put(linkId, this);
+            }
+            //不存在，添加
+            else {
+                linkMap.put(linkId, this);
+                addOnlineCount();
+            }
         } else {
-            webSocketMap.put(userId, this);
-            //加入set中
+            //保存企业主机连接
+            webSocketMap.put(linkId, this);
+            enterMap.put(enterId, webSocketMap);
             addOnlineCount();
-            //            //在线数加1
         }
-        System.out.println("当前用户id：" + userId);
+//        if (webSocketMap.containsKey(linkId)) {
+//            webSocketMap.remove(linkId);
+//            webSocketMap.put(linkId, this);
+//            //加入set中
+//        } else {
+//            webSocketMap.put(linkId, this);
+//            //加入set中
+//            addOnlineCount();
+//            //            //在线数加1
+//        }
+        System.out.println("当前用户id：" + linkId);
         //判断该链接是否存在
 //        Hosts hosts = hostsService.selectHostId(userId);
 //        if (hosts != null) {
@@ -92,12 +127,12 @@ public class WebSocketServer {
 //            hostsService.addHosts(userId, name);
 //        }
 
-        log.info("用户连接:" + name + userId + ",当前在线人数为:" + getOnlineCount());
+        log.info("用户连接:" + name + linkId + ",当前在线人数为:" + getOnlineCount());
         // System.out.println("用户连接:"+userId+",当前在线人数为:" + getOnlineCount());
         try {
             sendMessage("连接成功");
         } catch (IOException e) {
-            log.error("用户:" + userId + ",网络异常!!!!!!");
+            log.error("用户:" + linkId + ",网络异常!!!!!!");
             //System.out.println("用户:"+userId+",网络异常!!!!!!");
         }
     }
@@ -107,18 +142,20 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
-        if (webSocketMap.containsKey(userId)) {
-            webSocketMap.remove(userId);
-            //查询主机，修改状态
+        if (enterMap.containsKey(enterId)) {
+            if (enterMap.get(enterId).containsKey(linkId)) {
+                enterMap.get(enterId).remove(linkId);
+                //查询主机，修改状态
 //            Hosts hosts = hostsService.selectHostId(userId);
 //            if (hosts != null) {
 //                hosts.setLinkState("1");
 //                hostsService.updateHostLState(hosts);
 //            }
-            //从set中删除
-            subOnlineCount();
+                //从set中删除
+                subOnlineCount();
+            }
         }
-        log.info("用户退出:" + userId + ",当前在线人数为:" + getOnlineCount());
+        log.info("用户退出:" + linkId + ",当前在线人数为:" + getOnlineCount());
         //System.out.println("用户退出:"+userId+",当前在线人数为:" + getOnlineCount());
     }
 
@@ -129,7 +166,7 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("用户消息:" + userId + ",报文:" + message);
+        log.info("用户消息:" + linkId + ",报文:" + message);
         //System.out.println("用户消息:"+userId+",报文:"+message);
         //可以群发消息
         //消息保存到数据库、redis
@@ -162,7 +199,7 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("用户错误:" + this.userId + ",原因:" + error.getMessage());
+        log.error("用户错误:" + this.linkId + ",原因:" + error.getMessage());
         error.printStackTrace();
     }
 
@@ -170,26 +207,28 @@ public class WebSocketServer {
      * 实现服务器主动推送
      */
     public void sendMessage(String message) throws IOException {
-        log.info("推送消息到窗口" + userId + "，推送内容:" + message);
+        log.info("推送消息到窗口" + linkId + "，推送内容:" + message);
         this.session.getBasicRemote().sendText(message);
     }
 
-    public static void selectAllUser() {
-        Set<String> keys = webSocketMap.keySet();
-        for (String a : keys) {
-            System.out.println("当前连接id：###########" + a);
-        }
-    }
+//    public static void selectAllUser() {
+//        Set<String> keys = webSocketMap.keySet();
+//        for (String a : keys) {
+//            System.out.println("当前连接id：###########" + a);
+//        }
+//    }
 
-    public static void senAllMessage(String message) throws IOException {
+    public static void senAllMessage(String enterId, String message) throws IOException {
         //获取所有key
-        Set<String> keys = webSocketMap.keySet();
+        Set<String> keys = enterMap.get(enterId).keySet();
         Iterator<String> iterator1 = keys.iterator();
         while (iterator1.hasNext()) {
             // System.out.print(iterator1.next() +", ");
-            webSocketMap.get(iterator1.next()).sendMessage(message);
+            Map<String, String> map = new HashMap<>();
+            map.put("type", "4");
+            map.put("data", message);
+            enterMap.get(enterId).get(iterator1.next()).sendMessage(JSON.toJSONString(map));
         }
-
         //获取所有value
 //        Collection<Integer> values=map.values();
 //        Iterator<Integer> iterator2=values.iterator();
@@ -200,12 +239,30 @@ public class WebSocketServer {
     }
 
     /**
+     * @desc: 查询某企业下所有主机
+     * @author: sen
+     * @date: 2020/8/6 0006 7:50
+     **/
+    public static String enterHostAll(String enterId) throws IOException {
+        Set<String> keys = enterMap.get(enterId).keySet();
+        Iterator<String> iterator1 = keys.iterator();
+        String sumHost = "";
+        while (iterator1.hasNext()) {
+            sumHost = sumHost + "######" + iterator1.next();
+        }
+        return sumHost;
+    }
+
+    /**
      * 发送自定义消息
      */
-    public static void sendInfo(String message, @PathParam("userId") String userId) throws IOException {
+    public static void sendInfo(String message, String enterId, @PathParam("userId") String userId) throws IOException {
         log.info("发送消息到:" + userId + "，报文:" + message);
-        if (StringUtils.isNotBlank(userId) && webSocketMap.containsKey(userId)) {
-            webSocketMap.get(userId).sendMessage(message);
+        if (StringUtils.isNotBlank(userId) && enterMap.get(enterId).containsKey(userId)) {
+            Map<String, String> map = new HashMap<>();
+            map.put("type", "1");
+            map.put("data", message);
+            enterMap.get(enterId).get(userId).sendMessage(JSON.toJSONString(map));
         } else {
             log.error("用户" + userId + ",不在线！");
         }

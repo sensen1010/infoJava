@@ -2,7 +2,6 @@ package com.topnice.demoweb.controller;
 
 import com.topnice.demoweb.entity.Hosts;
 import com.topnice.demoweb.service.HostsService;
-import com.topnice.demoweb.service.WebSocketServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class HostsController {
     private Map<String, Object> selectHosts(String hostName, String hostState, String linkState, String page, String size) {
         map = new HashMap<>();
         String data = hostsService.findHosts(hostName, hostState, linkState, page, size);
-        WebSocketServer.selectAllUser();
+
         map.put("data", data + "");
         return map;
     }

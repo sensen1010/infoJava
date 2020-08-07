@@ -121,4 +121,23 @@ public class FileController {
         myMap.put("code", "0");
         return myMap;
     }
+
+    /**
+     * @desc: 保存截图
+     * @author: sen
+     * @date: 2020/8/5 0005 9:25
+     **/
+    @ApiOperation(value = "文件上传", notes = "文件上传接口")
+    @RequestMapping(value = "/proFile", method = RequestMethod.POST)
+    public synchronized Map<String, Object> proFileUpload(@RequestParam("file") MultipartFile reportFile, String enterId) {
+        myMap = new HashMap<>();
+        String re = fileUpService.proImgAdd(reportFile, enterId);
+        if (re == null) {
+            myMap.put("code", "1");
+            return myMap;
+        }
+        myMap.put("code", "0");
+        myMap.put("data", re);
+        return myMap;
+    }
 }

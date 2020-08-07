@@ -6,4 +6,6 @@ public interface FileUpService {
 
     String add(MultipartFile reportFile, String userId, String enterId);
 
+    String proImgAdd(MultipartFile reportFile, String enterId);
+
 }

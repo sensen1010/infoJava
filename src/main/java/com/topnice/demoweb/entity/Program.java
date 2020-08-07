@@ -34,7 +34,13 @@ public class Program implements Serializable {
 
     private String layoutType;//布局类型
 
+    @Lob
+    @Column(columnDefinition = "text")
     private String content;//布局内容  {1:{},2{},3{},4{}}
+
+    @Lob
+    @Column(columnDefinition = "text")
+    private String contentHtml;//布局html代码，用于预览
 
     private Date creationTime;
 

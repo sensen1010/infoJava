@@ -17,15 +17,21 @@ import java.io.IOException;
 public class SocketController {
 
     @RequestMapping("userall")
-    public String userall(String message) throws IOException {
-        WebSocketServer.senAllMessage(message);
+    public String userall(String enterId, String message) throws IOException {
+        WebSocketServer.senAllMessage(enterId, message);
         return "成功";
     }
 
     @RequestMapping("/push/{toUserId}")
-    public ResponseEntity<String> pushToWeb(String message, @PathVariable String toUserId) throws IOException {
+    public ResponseEntity<String> pushToWeb(String message, String enterId, @PathVariable String toUserId) throws IOException {
         System.out.println(message);
-        WebSocketServer.sendInfo(message, toUserId);
+        WebSocketServer.sendInfo(message, enterId, toUserId);
+        return ResponseEntity.ok("MSG SEND SUCCESS");
+    }
+
+    @RequestMapping("/enterHostAll")
+    public ResponseEntity<String> pushToEnter(String enterId) throws IOException {
+        System.out.println(WebSocketServer.enterHostAll(enterId));
         return ResponseEntity.ok("MSG SEND SUCCESS");
     }
 

@@ -121,4 +121,40 @@ public class IFileUpService implements FileUpService {
         return JSONObject.toJSONString(list);
     }
 
+    @Override
+    public String proImgAdd(MultipartFile reportFile, String enterId) {
+        Enterprise enterprise = enterpriseService.findByEnterId(enterId);
+        if (enterprise == null) {
+            return null;
+        }
+        String newFilePath = null;
+        try {
+            //上传文件的名称
+            String upFileName = reportFile.getOriginalFilename();
+            //截取末尾类型
+            int lastFile = upFileName.lastIndexOf(".");
+            String upFileType = upFileName.substring(lastFile + 1, upFileName.length());
+            //判断存储位置
+            String fileTypePath = "program";
+            //新的存储位置
+            newFilePath = enterId + "/" + fileTypePath + "/";
+            //文件名
+            String uuidFile = UUID.randomUUID().toString().replace("-", "");
+            String fileName = uuidFile + "." + upFileType;
+            //设置文件路径，
+            String filePath = UPLOAD_FOLDER + newFilePath;
+            File targetFile = new File(filePath);
+            if (!targetFile.exists()) {
+                targetFile.mkdirs();
+            }
+            File oldFile = new File(filePath + fileName);
+            reportFile.transferTo(oldFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
+        return newFilePath;
+    }
+
 }

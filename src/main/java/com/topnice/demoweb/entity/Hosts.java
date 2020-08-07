@@ -32,6 +32,9 @@ public class Hosts implements Serializable {
     @ApiModelProperty(value = "主机名称")
     private String hostName;
 
+    @ApiModelProperty(value = "主机Ip")
+    private String hostIp;
+
     @ApiModelProperty(value = "主机websocket 链接id")
     private String hostLinkId;
 

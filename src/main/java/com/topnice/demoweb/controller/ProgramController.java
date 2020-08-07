@@ -8,9 +8,7 @@ import com.topnice.demoweb.service.ProgramService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,21 +38,45 @@ public class ProgramController {
         System.out.println(Arrays.toString(contex));
         return map;
     }
-
     @ApiOperation(value = "/pro/add", notes = "添加节目")
     @RequestMapping("/pro/add")
     private Map<String, String> addProgram(Program program) {
         map = new HashMap<>();
         System.out.println(program);
-        map.put("data", programService.add(program) + "");
+        Program program1 = programService.add(program);
+        map.put("code", "0");
+        map.put("proId", program1.getProId() + "");
         return map;
     }
 
-    @ApiOperation(value = "/pro/select", notes = "查询节目")
-    @RequestMapping("/pro/select")
-    private Map<String, String> selectProgram(String name, String page, String size) {
+    @ApiOperation(value = "/pro/{proId}", notes = "更新节目")
+    @RequestMapping(value = "/pro/{proId}", method = RequestMethod.PATCH)
+    private Map<String, String> updateProgram(@PathVariable("proId") String proId, String enterId, String content, String contentHtml) {
         map = new HashMap<>();
-        map.put("data", programService.findByName(name, page, size) + "");
+        Program program1 = programService.modifyPro(proId, enterId, content, contentHtml);
+        if (program1 == null) {
+            map.put("code", "1");
+            return map;
+        } else {
+            map.put("code", "0");
+            map.put("proId", program1.getProId() + "");
+        }
+        return map;
+    }
+
+    @ApiOperation(value = "/pro/{enterId},根据企业Id查询节目", notes = "查询节目")
+    @RequestMapping(value = "/pro/{enterId}", method = RequestMethod.GET)
+    private Map<String, String> enterSelectProgram(@PathVariable("enterId") String enterId, String name, String page, String size) {
+        map = new HashMap<>();
+        map.put("data", programService.enterFindByName(enterId, name, page, size) + "");
+        return map;
+    }
+
+    @ApiOperation(value = "/pro/{enterId},根据企业Id、节目id查询节目", notes = "查询节目")
+    @RequestMapping(value = "/pro/{enterId}/{programId}", method = RequestMethod.GET)
+    private Map<String, String> enterSelectProgramById(@PathVariable("enterId") String enterId, @PathVariable("programId") String programId) {
+        map = new HashMap<>();
+        map.put("data", programService.enterFindByProgramId(enterId, programId) + "");
         return map;
     }
 
