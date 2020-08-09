@@ -42,5 +42,5 @@ server:
   tomcat:
     uri-encoding: UTF-8
 prop:
-  upload-folder: E:\\imgfile\\
+  upload-folder: F:\apache-tomcat-9.0.29\webapps\file\
   file-host: http://192.168.1.52:8080/newfile

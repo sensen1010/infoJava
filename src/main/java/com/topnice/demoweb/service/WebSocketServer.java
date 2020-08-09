@@ -2,6 +2,8 @@ package com.topnice.demoweb.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.topnice.demoweb.entity.Enterprise;
+import com.topnice.demoweb.entity.Hosts;
 import com.topnice.demoweb.util.WebSocketUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -15,10 +17,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/imserver/{enterId}/{linkId}/{name}")
@@ -49,7 +48,7 @@ public class WebSocketServer {
      * 用户名称
      **/
     /**
-     * 接收userId
+     * 接收linkId
      */
     private String linkId = "";
     /**
@@ -57,15 +56,24 @@ public class WebSocketServer {
      **/
     private String name;
 
+    private String hostId;
+
     //IHostsService hostsService = (IHostsService)MyApplicationContextAware.getApplicationContext().getBean("IHostsService");
 
-    private static HostsService hostsService;
+
+    private  static HostsService hostsService;
+    @Autowired
+    private  static EnterpriseService enterpriseService;
 
     @Autowired
     public void setUserService(HostsService hostsService) {
         WebSocketServer.hostsService = hostsService;
     }
 
+    @Autowired
+    public void setEnterService(EnterpriseService enterpriseService) {
+        WebSocketServer.enterpriseService = enterpriseService;
+    }
 
     /**
      * 连接建立成功调用的方法
@@ -75,8 +83,8 @@ public class WebSocketServer {
         if (name == null) {
             name = "未知主机";
         }
-        System.out.println("获取到地址" + WebSocketUtil.getRemoteAddress(session));
-        System.out.println(enterId + "#######" + linkId + "##########" + name);
+//        System.out.println("获取到地址" + WebSocketUtil.getRemoteAddress(session));
+//        System.out.println(enterId + "#######" + linkId + "##########" + name);
         try {
             this.name = URLDecoder.decode(name, "utf-8");
             name = this.name;
@@ -86,6 +94,23 @@ public class WebSocketServer {
         this.session = session;
         this.linkId = linkId;
         this.enterId = enterId;
+        this.hostId=WebSocketUtil.getRemoteAddress(session)+"";
+        try {
+        //先判断企业是否存在
+        Enterprise enterprise=enterpriseService.findByEnterId(enterId);
+        if (enterprise==null){
+            sendMessage("{type:'-1'.data:''}");
+            return;
+        }
+        //判断主机是否已保存
+         Hosts hosts=hostsService.findEnterIdAndHostLinkId(enterId,linkId);
+        if (hosts==null){
+            hostsService.add(hostId,linkId,name,enterId);
+        }else {
+            updateHostState(enterId,linkId,"0");
+        }
+
+        //链接操作
         //判断是否存在企业主机列表
         ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
         if (enterMap.containsKey(enterId)) {
@@ -107,16 +132,9 @@ public class WebSocketServer {
             enterMap.put(enterId, webSocketMap);
             addOnlineCount();
         }
-//        if (webSocketMap.containsKey(linkId)) {
-//            webSocketMap.remove(linkId);
-//            webSocketMap.put(linkId, this);
-//            //加入set中
-//        } else {
-//            webSocketMap.put(linkId, this);
-//            //加入set中
-//            addOnlineCount();
-//            //            //在线数加1
-//        }
+
+
+
         System.out.println("当前用户id：" + linkId);
         //判断该链接是否存在
 //        Hosts hosts = hostsService.selectHostId(userId);
@@ -126,11 +144,9 @@ public class WebSocketServer {
 //        } else {
 //            hostsService.addHosts(userId, name);
 //        }
-
         log.info("用户连接:" + name + linkId + ",当前在线人数为:" + getOnlineCount());
         // System.out.println("用户连接:"+userId+",当前在线人数为:" + getOnlineCount());
-        try {
-            sendMessage("连接成功");
+         sendMessage("连接成功");
         } catch (IOException e) {
             log.error("用户:" + linkId + ",网络异常!!!!!!");
             //System.out.println("用户:"+userId+",网络异常!!!!!!");
@@ -146,12 +162,7 @@ public class WebSocketServer {
             if (enterMap.get(enterId).containsKey(linkId)) {
                 enterMap.get(enterId).remove(linkId);
                 //查询主机，修改状态
-//            Hosts hosts = hostsService.selectHostId(userId);
-//            if (hosts != null) {
-//                hosts.setLinkState("1");
-//                hostsService.updateHostLState(hosts);
-//            }
-                //从set中删除
+                updateHostState(enterId,linkId,"1");
                 subOnlineCount();
             }
         }
@@ -191,6 +202,17 @@ public class WebSocketServer {
 //        }
     }
 
+    public void updateHostState(String enterId,String linkId,String linkState){
+
+            Hosts hosts = hostsService.findEnterIdAndHostLinkId(enterId,linkId);
+            if (hosts != null) {
+                hosts.setLinkState(linkState);
+                hosts.setLinkTime(new Date());
+                hostsService.modifyHostLState(hosts);
+            }
+
+    }
+
     /**
      * 用户链接错误
      *
@@ -200,7 +222,8 @@ public class WebSocketServer {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("用户错误:" + this.linkId + ",原因:" + error.getMessage());
-        error.printStackTrace();
+        updateHostState(enterId,linkId,"1");
+       // error.printStackTrace();
     }
 
     /**

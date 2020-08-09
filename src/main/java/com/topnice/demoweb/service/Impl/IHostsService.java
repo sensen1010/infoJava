@@ -32,21 +32,19 @@ public class IHostsService implements HostsService {
      * @date: 2020/6/19 0019 9:42
      **/
     @Override
-    public Hosts add(String hostLinkId, String hostName, String enterId) {
+    public Hosts add(String hostIp,String hostLinkId, String hostName, String enterId) {
         hostLinkId = hostLinkId == null || hostLinkId.equals("") ? "" : hostLinkId;
-        Hosts rehost = hostsRepository.findAllByHostLinkId(hostLinkId);
-        if (rehost == null) {
+
             Hosts hosts = new Hosts();
             hosts.setEnterId(enterId);
             hosts.setHostState("0");
             hosts.setHostName(hostName);
+            hosts.setHostIp(hostIp);
             hosts.setHostLinkId(hostLinkId);
             hosts.setCreationTime(new Date());
             hosts.setLinkState("0");
             hosts.setHostId(UUID.randomUUID().toString().replace("-", ""));
             return hostsRepository.save(hosts);
-        }
-        return null;
     }
 
     /**
@@ -55,12 +53,26 @@ public class IHostsService implements HostsService {
      * @date: 2020/6/19 0019 9:27
      **/
     @Override
-    public String findHost(String enterId, String state, String page, String size) {
+    public String findHost(String enterId, String hostName,String linkState,String state, String page, String size) {
         state = state == null || state.equals("") ? "" : state;
+        hostName = hostName == null || hostName.equals("") ? "" : hostName;
+        linkState = linkState == null || linkState.equals("") ? "" : linkState;
         //如果为null默认为0
         Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
         //如果为null默认为10
         Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
+
+        Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "id");
+        Page<Hosts> all = hostsRepository.findByEnterIdAndHostNameContainingAndLinkStateContaining(enterId,hostName,linkState,pageable);
+        lists = new ArrayList<>();
+        list = new ArrayList<>();
+        mapAll = new HashMap<>();
+        for (Hosts hosts : all) {
+            list.add(hostsMap(hosts));
+        }
+        mapAll.put("data", JSONObject.toJSON(list));
+        mapAll.put("size", all.getTotalElements());
+        lists.add(mapAll);
         return JSONObject.toJSONString(lists);
     }
 
@@ -131,7 +143,10 @@ public class IHostsService implements HostsService {
         return hostsRepository.findAllByHostLinkId(hostLinkId);
     }
 
-
+    @Override
+    public Hosts findEnterIdAndHostLinkId(String enterId, String hostLinkId) {
+        return hostsRepository.findAllByEnterIdAndHostLinkId(enterId, hostLinkId);
+    }
     Map<String, String> hostsMap(Hosts hosts) {
         Map<String, String> map = new HashMap<>();
         map.put("id", hosts.getId() + "");

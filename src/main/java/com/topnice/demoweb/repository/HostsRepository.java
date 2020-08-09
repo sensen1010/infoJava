@@ -24,5 +24,10 @@ public interface HostsRepository extends JpaRepository<Hosts, Integer> {
 
     Hosts findAllByHostLinkId(String hostLinkId);
 
+    Hosts findAllByEnterIdAndHostLinkId(String enterId,String hostLinkId);
+
+    //根据企业Id、名称分页查询
+    Page<Hosts> findByEnterIdAndHostNameContainingAndLinkStateContaining(String enterId,String hostName,String linkState,Pageable pageable);
+
 
 }
