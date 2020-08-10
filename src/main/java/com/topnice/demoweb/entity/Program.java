@@ -44,10 +44,6 @@ public class Program implements Serializable {
 
     private Date creationTime;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "programProHis",
-            joinColumns = {@JoinColumn(name = "proId", referencedColumnName = "proId")},
-            inverseJoinColumns = {@JoinColumn(name = "proHisId", referencedColumnName = "proHisId")})
-    private Set<ProHis> proHis;
+
 
 }

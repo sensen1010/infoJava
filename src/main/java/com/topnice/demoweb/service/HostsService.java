@@ -26,6 +26,9 @@ public interface HostsService {
     //根据主机Id查询是否存在
     Hosts findHostId(String hostLinkId);
 
+    //根据企业id、连接状态、状态查询
+    String findHostList(String enterId,String linkState,String state);
+
     //根据企业id、链接id是否存在
     Hosts findEnterIdAndHostLinkId(String enterId,String hostLinkId);
 }

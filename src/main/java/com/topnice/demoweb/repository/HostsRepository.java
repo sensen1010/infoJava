@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 @Repository
@@ -28,6 +29,7 @@ public interface HostsRepository extends JpaRepository<Hosts, Integer> {
 
     //根据企业Id、名称分页查询
     Page<Hosts> findByEnterIdAndHostNameContainingAndLinkStateContaining(String enterId,String hostName,String linkState,Pageable pageable);
-
+    //根据企业id、连接id查询
+    List<Hosts> findAllByEnterIdAndLinkStateAndHostState(String enterId, String linkState, String hostState);
 
 }

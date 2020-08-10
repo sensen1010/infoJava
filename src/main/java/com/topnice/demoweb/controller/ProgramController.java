@@ -31,13 +31,6 @@ public class ProgramController {
     Map<String, String> map;
 
 
-    @ApiOperation(value = "/add", notes = "添加节目")
-    @RequestMapping("/add")
-    private Map<String, String> addProgram1(String[] contex) {
-        map = new HashMap<>();
-        System.out.println(Arrays.toString(contex));
-        return map;
-    }
     @ApiOperation(value = "/pro/add", notes = "添加节目")
     @RequestMapping("/pro/add")
     private Map<String, String> addProgram(Program program) {
@@ -80,19 +73,25 @@ public class ProgramController {
         return map;
     }
 
-    @ApiOperation(value = "/proHis/add", notes = "发布节目")
+    @ApiOperation(value = "/proHis/add", notes = "企业发布节目")
     @RequestMapping("/proHis/add")
-    private Map<String, String> addProHis(ProHis proHis) {
+    private Map<String, String> addProHis(String enterId,String userId,String proId,String type,String[] hostList) {
         map = new HashMap<>();
-        map.put("data", proHisService.add(proHis) + "");
+        ProHis proHis= proHisService.add(enterId,userId,proId,type,hostList);
+        if (proHis==null){
+            map.put("code","1");
+            return map;
+        }
+        map.put("code","0");
+        map.put("data",proHis+"");
         return map;
     }
 
     @ApiOperation(value = "/proHis/select", notes = "查询发布节目历史")
     @RequestMapping("/proHis/select")
-    private Map<String, String> selectProHis(String name, String page, String size) {
+    private Map<String, String> selectProHis(String enterId,String name, String page, String size) {
         map = new HashMap<>();
-        map.put("data", proHisService.findByName(name, page, size));
+        map.put("data", proHisService.enterFindByName(enterId,name,page,size));
         return map;
     }
 

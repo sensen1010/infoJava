@@ -203,7 +203,6 @@ public class WebSocketServer {
     }
 
     public void updateHostState(String enterId,String linkId,String linkState){
-
             Hosts hosts = hostsService.findEnterIdAndHostLinkId(enterId,linkId);
             if (hosts != null) {
                 hosts.setLinkState(linkState);
@@ -240,15 +239,15 @@ public class WebSocketServer {
 //            System.out.println("当前连接id：###########" + a);
 //        }
 //    }
-
-    public static void senAllMessage(String enterId, String message) throws IOException {
+    //对某企业下所有主机发送消息
+    public static void senEnterAllMessage(String enterId, String message) throws IOException {
         //获取所有key
         Set<String> keys = enterMap.get(enterId).keySet();
         Iterator<String> iterator1 = keys.iterator();
         while (iterator1.hasNext()) {
             // System.out.print(iterator1.next() +", ");
             Map<String, String> map = new HashMap<>();
-            map.put("type", "4");
+            map.put("type", "1");
             map.put("data", message);
             enterMap.get(enterId).get(iterator1.next()).sendMessage(JSON.toJSONString(map));
         }

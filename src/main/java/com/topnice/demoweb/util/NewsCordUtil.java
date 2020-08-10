@@ -13,8 +13,7 @@ import java.util.regex.Pattern;
 @Component
 public class NewsCordUtil {
 
-    @Value("${prop.file-host}")
-    private String FILE_HOST;
+    private String FILE_HOST="asdasdasd";
 
     public static String PATTERN_L2DOMAIN = "\\w*\\.\\w*:";
     public static String PATTERN_IP = "(\\d*\\.){3}\\d*";

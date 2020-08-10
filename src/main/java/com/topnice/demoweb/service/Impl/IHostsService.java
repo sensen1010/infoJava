@@ -144,8 +144,25 @@ public class IHostsService implements HostsService {
     }
 
     @Override
+    public String findHostList(String enterId, String linkState, String state) {
+        List<Hosts>  all=hostsRepository.findAllByEnterIdAndLinkStateAndHostState(enterId,linkState,state);
+        System.out.println(enterId+all);
+        list = new ArrayList<>();
+        for (Hosts hosts : all) {
+            list.add(hostsListMap(hosts));
+        }
+        return JSONObject.toJSONString(list);
+    }
+
+    @Override
     public Hosts findEnterIdAndHostLinkId(String enterId, String hostLinkId) {
         return hostsRepository.findAllByEnterIdAndHostLinkId(enterId, hostLinkId);
+    }
+    Map<String, String> hostsListMap(Hosts hosts) {
+        Map<String, String> map = new HashMap<>();
+        map.put("hostId", hosts.getHostId());
+        map.put("hostName", hosts.getHostName());
+        return map;
     }
     Map<String, String> hostsMap(Hosts hosts) {
         Map<String, String> map = new HashMap<>();

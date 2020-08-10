@@ -3,8 +3,10 @@ package com.topnice.demoweb.service.Impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.topnice.demoweb.entity.Program;
+import com.topnice.demoweb.entity.Users;
 import com.topnice.demoweb.repository.ProgramRepository;
 import com.topnice.demoweb.service.ProgramService;
+import com.topnice.demoweb.service.UsersService;
 import com.topnice.demoweb.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +26,8 @@ public class IProgramService implements ProgramService {
     @Autowired
     ProgramRepository programRepository;
 
-
+    @Autowired
+    UsersService usersService;
 
     @Override
     public Program add(Program program) {
@@ -70,7 +73,8 @@ public class IProgramService implements ProgramService {
             map.put("name", program.getName());
             map.put("content", program.getContent());
             map.put("layoutType", program.getLayoutType());
-            map.put("userId", program.getUserId());
+            Users users=usersService.findByUserId(program.getUserId());
+            map.put("userName",users.getName()+"("+users.getUserName()+")");
             map.put("contentHtml", program.getContentHtml() + "");
             map.put("creationTime", DateUtil.date2TimeStamp(program.getCreationTime(), "yyyy-MM-dd HH:mm"));
             list.add(map);

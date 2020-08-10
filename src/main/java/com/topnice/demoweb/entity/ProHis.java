@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @DynamicInsert
@@ -33,8 +34,12 @@ public class ProHis implements Serializable {
     private String userId;//发布人id
 
     private String layoutType;//布局类型
-
+    @Lob
+    @Column(columnDefinition = "text")
     private String content;//布局内容
+    @Lob
+    @Column(columnDefinition = "text")
+    private String contentHtml;//布局html
 
     private String type;//发布类型  0全部  1部分
 
@@ -47,5 +52,6 @@ public class ProHis implements Serializable {
     private String weight;//权重
 
     private Date creationTime;
+
 
 }

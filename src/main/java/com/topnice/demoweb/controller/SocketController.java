@@ -18,7 +18,7 @@ public class SocketController {
 
     @RequestMapping("userall")
     public String userall(String enterId, String message) throws IOException {
-        WebSocketServer.senAllMessage(enterId, message);
+        WebSocketServer.senEnterAllMessage(enterId, message);
         return "成功";
     }
 

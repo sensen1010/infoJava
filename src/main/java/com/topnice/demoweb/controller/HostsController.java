@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -64,6 +65,19 @@ public class HostsController {
     private Map<String, Object> userSelectHosts(String enterId,String hostName,String linkState ,String state, String page, String size) {
         map = new HashMap<>();
         String all = hostsService.findHost(enterId, hostName,linkState,state, page, size);
+        if (all.equals("1")) {
+            map.put("code", "1");
+            return map;
+        }
+        map.put("code", "0");
+        map.put("data", all);
+        return map;
+    }
+    @ApiOperation(value = "/user/hostList", tags = "企业管理员查询主机列表")
+    @RequestMapping(value = "/user/hostList",method = RequestMethod.GET)
+    private Map<String, Object> userHostsList(String enterId,String linkState,String state) {
+        map = new HashMap<>();
+        String all = hostsService.findHostList(enterId,"0","0");
         if (all.equals("1")) {
             map.put("code", "1");
             return map;
