@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -35,6 +36,12 @@ public class IEnterpriseService implements EnterpriseService {
         //添加企业信息
         enterprise.setEnterId(UUID.randomUUID().toString().replace("-", ""));
         Enterprise reEnter = enterRepository.save(enterprise);
+        //内网版（只能注册一个企业）
+
+
+        //服务器版（）
+
+
         //根据企业信息，添加一个默认账号
         String userName;
         while (true) {
@@ -50,7 +57,10 @@ public class IEnterpriseService implements EnterpriseService {
         users.setUserName(userName);
         users.setType("1");
         users.setName(reEnter.getEnterName());
-        users.setPassword("123456");
+        //加密
+        String md5Str = DigestUtils.md5DigestAsHex("123456".getBytes());
+        String pow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
+        users.setPassword(pow);
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
 
         Users re = usersRepository.save(users);

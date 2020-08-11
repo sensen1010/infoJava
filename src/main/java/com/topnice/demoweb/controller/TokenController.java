@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Api(value = "token接口", tags = {"/enter"})
+@Api(value = "token接口", tags = {"/token"})
 @RestController
 @RequestMapping("/token")
 public class TokenController {
@@ -21,7 +21,7 @@ public class TokenController {
     @UserLoginToken
     @ApiOperation(value = "判断token是否过期", notes = "token")
     @RequestMapping(value = "/token", method = RequestMethod.POST)
-    public Map<String, String> token() {
+    synchronized public Map<String, String> token() {
         Map<String, String> map = new HashMap<>();
         map.put("code", "0");
         return map;

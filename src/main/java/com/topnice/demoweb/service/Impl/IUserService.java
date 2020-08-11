@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -30,8 +31,15 @@ public class IUserService implements UsersService {
 
     @Override
     public Users login(Users users) {
-        Users user = userRepository.findAllByUserNameAndPassword(users.getUserName(), users.getPassword());
+        Users user = userRepository.findAllByUserNameAndPassword(users.getUserName().trim(), users.getPassword().trim());
         if (user == null) {
+            return null;
+        }
+        if (user.getState().equals("1")){
+            return null;
+        }
+        Enterprise enterprise=enterRepository.findAllByEnterId(user.getEnterId());
+        if (enterprise.getState().equals("1")){
             return null;
         }
         return user;
@@ -48,6 +56,10 @@ public class IUserService implements UsersService {
         if (re != null) {
             return null;
         }
+        //加密
+        String md5Str = DigestUtils.md5DigestAsHex(users.getPassword().getBytes());
+        String pow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
+        users.setPassword(pow);
         //设置类型
         users.setType("2");
         users.setState("0");
@@ -132,13 +144,15 @@ public class IUserService implements UsersService {
 
     @Override
     public Users findByUserIdAndEnterId(String userId, String enterId) {
-
-
         Users re = userRepository.findAllByUserIdAndEnterId(userId, enterId);
         if (re == null) {
             return null;
         }
-
         return re;
+    }
+
+    @Override
+    public Users modifyUser(String userId, String user) {
+        return null;
     }
 }

@@ -44,7 +44,7 @@ public class UsersController {
             if (!data.getPassword().equals(users.getPassword())) {
                 mmap.put("code", "1");
                 return mmap;
-            } else {
+            }else {
                 String token = tokenService.getToken(data);
                 mmap.put("code", "0");
                 mmap.put("token", token);

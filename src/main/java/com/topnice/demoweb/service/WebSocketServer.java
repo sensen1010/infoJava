@@ -96,6 +96,11 @@ public class WebSocketServer {
         this.enterId = enterId;
         this.hostId=WebSocketUtil.getRemoteAddress(session)+"";
         try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
         //先判断企业是否存在
         Enterprise enterprise=enterpriseService.findByEnterId(enterId);
         if (enterprise==null){
@@ -169,6 +174,8 @@ public class WebSocketServer {
         log.info("用户退出:" + linkId + ",当前在线人数为:" + getOnlineCount());
         //System.out.println("用户退出:"+userId+",当前在线人数为:" + getOnlineCount());
     }
+
+
 
     /**
      * 收到客户端消息后调用的方法

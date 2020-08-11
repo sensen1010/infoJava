@@ -16,7 +16,7 @@ import java.util.Date;
 public class TokenService {
 
     private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
-    // private static final long EXPIRE_TIME = 15*1000;
+   //  private static final long EXPIRE_TIME = 30*1000;
     /**
      * token私钥
      */

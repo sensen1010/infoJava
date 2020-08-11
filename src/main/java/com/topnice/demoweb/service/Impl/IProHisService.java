@@ -152,6 +152,7 @@ public class IProHisService implements ProHisService {
                 map.put("name", program.getName());
                 map.put("content", program.getContent());
                 map.put("contentHtml", program.getContentHtml());
+                map.put("layoutType", program.getLayoutType());
                 map.put("proHisId", program.getProHisId());
                 map.put("creationTime", DateUtil.date2TimeStamp(program.getCreationTime(), "yyyy-MM-dd HH:mm"));
                 List<ProHisH> proHisHES=proHisHRepository.findAllByProHisId(program.getProHisId());

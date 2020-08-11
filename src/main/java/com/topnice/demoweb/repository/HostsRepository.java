@@ -5,6 +5,8 @@ import com.topnice.demoweb.entity.Hosts;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -31,5 +33,9 @@ public interface HostsRepository extends JpaRepository<Hosts, Integer> {
     Page<Hosts> findByEnterIdAndHostNameContainingAndLinkStateContaining(String enterId,String hostName,String linkState,Pageable pageable);
     //根据企业id、连接id查询
     List<Hosts> findAllByEnterIdAndLinkStateAndHostState(String enterId, String linkState, String hostState);
+
+    @Modifying
+    @Query(value ="update Hosts set link_state='1' WHERE link_state='0'",nativeQuery = true)
+    void updateAllHostLinkState();
 
 }

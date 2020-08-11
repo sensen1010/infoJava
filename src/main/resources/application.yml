@@ -10,7 +10,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
     # ddl-auto: create 每次运行程序建立一个空的表，如果表存在，先删除再新建
     # ddl-auto: update 程序第一次运行时创建表，之后若存在数据，不会删除表
     # ddl-auto: create-drop 应用停下来的时候就删除表
@@ -30,7 +29,6 @@ spring:
 
 files:
   path: ${file-path:f:/files}
-
   output:
     ansi:
       enabled: always
@@ -38,8 +36,11 @@ files:
     multipart:
       max-file-size: 10Mb
       max-request-size: -1
+   #tomcat编码格式
 server:
   tomcat:
     uri-encoding: UTF-8
+    #上传文件地址
 prop:
   upload-folder: E:\imgfile\
+
