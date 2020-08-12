@@ -32,11 +32,25 @@ public class Enterprise implements Serializable {
     @ApiModelProperty(value = "默认账号id")
     private String defaultUserId;
 
-    @ApiModelProperty(value = "主机数量")
-    private String hostNum;
-
     @ApiModelProperty(value = "企业认证信息")
+    @Lob
+    @Column(columnDefinition = "text")
     private String enterAuth;
+
+    @ApiModelProperty(value = "主机数量认证信息")
+    @Lob
+    @Column(columnDefinition = "text")
+    private String hostNumAuth;
+
+    @ApiModelProperty(value = "企业可用天数")
+    @Lob
+    @Column(columnDefinition = "text")
+    private String enterDayAuth;
+
+    @ApiModelProperty(value = "企业创建时间")
+    @Lob
+    @Column(columnDefinition = "text")
+    private String enterTimeAuth;
 
     @ApiModelProperty(value = "创建时间")
     private Date creationTime;

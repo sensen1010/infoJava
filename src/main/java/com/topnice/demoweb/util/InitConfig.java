@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * @desc: 项目启动时执行
@@ -35,6 +39,17 @@ public class InitConfig implements ApplicationRunner {
                     }
                 }
             }).start();
+        //获取项目的绝对路径
+        File path = null;
+        try {
+            path = new File(ResourceUtils.getURL("classpath:").getPath());
+            if (!path.exists()) path = new File("");
+            System.out.println("path:" + path.getAbsolutePath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
         log.info("项目启动初始化结束ApplicationRunner");
     }
 }

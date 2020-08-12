@@ -8,8 +8,9 @@ import com.topnice.demoweb.repository.UsersRepository;
 import com.topnice.demoweb.service.EnterpriseService;
 import com.topnice.demoweb.service.UsersService;
 import com.topnice.demoweb.util.DateUtil;
-import org.apache.commons.lang.RandomStringUtils;
+import com.topnice.demoweb.util.EnterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,36 +32,100 @@ public class IEnterpriseService implements EnterpriseService {
     @Autowired
     UsersRepository usersRepository;
 
+    @Value("${info.type}")
+    private String TYPE;
+
+
     @Override
-    public String add(Enterprise enterprise) {
-        //添加企业信息
-        enterprise.setEnterId(UUID.randomUUID().toString().replace("-", ""));
-        Enterprise reEnter = enterRepository.save(enterprise);
-        //内网版（只能注册一个企业）
-
-
-        //服务器版（）
-
-
-        //根据企业信息，添加一个默认账号
-        String userName;
-        while (true) {
-            userName = RandomStringUtils.randomAlphanumeric(8);
-            Users reUsers = usersService.findByUserNameAndEnterId(userName, reEnter.getEnterId());
-            if (reUsers == null) {
-                break;
+    public String add(Enterprise enterprise, String userName, String pow) {
+        //内网、外网版判断  若是内网、只能创建一个账号
+        if (!TYPE.equals("INTERNET")) {
+            List<Enterprise> enterprises = enterRepository.findAll();
+            if (enterprise != null) {
+                return "100";
             }
         }
+
+        //判断账号是否存在
+        Users reUsers = usersRepository.findAllByUserName(userName);
+        if (reUsers != null) {
+            return "101";
+        }
+
+        //添加企业信息
+        enterprise.setEnterId(UUID.randomUUID().toString().replace("-", ""));
+        int date = DateUtil.timeStamp();
+        //设置 3天5台机
+        enterprise.setEnterDayAuth(EnterUtil.encryption("3"));
+        enterprise.setHostNumAuth(EnterUtil.encryption("5"));
+        enterprise.setEnterTimeAuth(EnterUtil.encryption(date + ""));
+        enterprise.setCreationTime(new Date());
+        enterprise.setState("0");
+        Enterprise reEnter = enterRepository.save(enterprise);
+
+
         Users users = new Users();
         users.setEnterId(reEnter.getEnterId());
         users.setCreationTime(new Date());
         users.setUserName(userName);
         users.setType("1");
+        users.setState("0");
         users.setName(reEnter.getEnterName());
         //加密
-        String md5Str = DigestUtils.md5DigestAsHex("123456".getBytes());
-        String pow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
-        users.setPassword(pow);
+        String md5Str = DigestUtils.md5DigestAsHex(pow.getBytes());
+        String encrypPow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
+        users.setPassword(encrypPow);
+        users.setUserId(UUID.randomUUID().toString().replace("-", ""));
+        Users re = usersRepository.save(users);
+        List<Map<String, String>> list = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
+        map.put("userId", re.getUserId());
+        map.put("userName", re.getUserName());
+        map.put("name", re.getName());
+        map.put("pow", re.getPassword());
+        map.put("type", re.getType());
+        list.add(map);
+        //更新保存默认账号id
+        reEnter.setDefaultUserId(re.getUserId());
+        enterRepository.saveAndFlush(reEnter);
+        return JSONObject.toJSONString(list);
+    }
+
+    @Override
+    public String adminAdd(String enterName, String hostNum, String day, String userName, String pow, String userId) {
+        Users reUser = usersRepository.findAllByUserId(userId);
+        if (!reUser.getType().equals("0")) {
+            return null;
+        }
+
+        //判断账号是否存在
+        Users reUsers = usersRepository.findAllByUserName(userName);
+        if (reUsers != null) {
+            return "101";
+        }
+
+        Enterprise enterprise = new Enterprise();
+        enterprise.setEnterName(enterName);
+        enterprise.setHostNumAuth(EnterUtil.encryption(hostNum));
+        enterprise.setEnterDayAuth(EnterUtil.encryption(day));
+        int date = DateUtil.timeStamp();
+        enterprise.setEnterTimeAuth(EnterUtil.encryption(date + ""));
+        enterprise.setState("0");
+        enterprise.setCreationTime(new Date());
+        enterprise.setEnterId(UUID.randomUUID().toString().replace("-", ""));
+        Enterprise reEnter = enterRepository.save(enterprise);
+
+        Users users = new Users();
+        users.setEnterId(reEnter.getEnterId());
+        users.setCreationTime(new Date());
+        users.setUserName(userName);
+        users.setType("1");
+        users.setState("0");
+        users.setName(reEnter.getEnterName());
+        //加密
+        String md5Str = DigestUtils.md5DigestAsHex(pow.getBytes());
+        String encrypPow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
+        users.setPassword(encrypPow);
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
 
         Users re = usersRepository.save(users);
@@ -99,11 +164,20 @@ public class IEnterpriseService implements EnterpriseService {
             Map<String, String> map = new HashMap<>();
             map.put("enterId", enter.getEnterId());
             map.put("enterName", enter.getEnterName());
-            map.put("hostNum", enter.getHostNum());
             map.put("enterAuth", enter.getEnterAuth());
+            map.put("hostNum", EnterUtil.decrypt(enter.getHostNumAuth()));
+            String creatTime = EnterUtil.decrypt(enter.getEnterTimeAuth());
+            String day = EnterUtil.decrypt(enter.getEnterDayAuth());
+            if (creatTime != null && day != null) {
+                String endTime = DateUtil.addOneday(creatTime, Integer.parseInt(day));
+                map.put("enterTime", endTime);
+            }
+            Users users = usersRepository.findAllByUserId(enter.getDefaultUserId());
+            map.put("userName", users.getUserName());
+            map.put("userId", users.getUserId());
             map.put("creationTime", DateUtil.date2TimeStamp(enter.getCreationTime(), "yyyy-MM-dd HH:mm"));
+
             map.put("state", enter.getState() + "");
-            map.put("enterIp", enter.getEnterIp());
             list.add(map);
         }
         maps.put("size", all.getTotalElements() + "");
@@ -123,10 +197,38 @@ public class IEnterpriseService implements EnterpriseService {
     }
 
     @Override
-    public Enterprise modifyEnter(Enterprise enterprise) {
+    public Enterprise modifyEnter(String enterId, String hostNum, String day, String userId) {
+        //查询用户
+        Users users = usersRepository.findAllByUserId(userId);
+        if (users != null && !users.getType().equals("0")) {
+            return null;
+        }
+        //查询企业信息
+        Enterprise enterprise = enterRepository.findAllByEnterId(enterId);
+        if (enterprise == null) {
+            return null;
+        }
+        System.out.println(day);
+        //企业信息
+        String enterTime = EnterUtil.decrypt(enterprise.getEnterTimeAuth());
+        //时间转时间
+        long createTime = Long.parseLong(enterTime);
+        long time = DateUtil.timeDateStamp(day, "yyyy-MM-dd");
+        System.out.println(createTime);
+        System.out.println(time);
+        if (createTime > time) {
+            enterprise.setEnterDayAuth(EnterUtil.encryption("0"));
+        } else {
+            int newDay = (int) (time - createTime) / (24 * 3600);
+            if (newDay < 1) {
+                enterprise.setEnterDayAuth(EnterUtil.encryption("1"));
+            } else {
+                enterprise.setEnterDayAuth(EnterUtil.encryption(newDay + ""));
+            }
+        }
+        enterprise.setHostNumAuth(EnterUtil.encryption(hostNum));
 
-
-        return null;
+        return enterRepository.saveAndFlush(enterprise);
     }
 
     @Override
@@ -157,4 +259,30 @@ public class IEnterpriseService implements EnterpriseService {
         }
         return JSONObject.toJSONString(list);
     }
+
+    @Override
+    public boolean checkEnter(String enterId) {
+        //查询企业
+        Enterprise enterprise = enterRepository.findAllByEnterId(enterId);
+        if (enterprise == null) {
+            return false;
+        } else {
+            String creatTime = EnterUtil.decrypt(enterprise.getEnterTimeAuth());
+            String day = EnterUtil.decrypt(enterprise.getEnterDayAuth());
+            System.out.println(creatTime + "#####" + day);
+            if (creatTime != null && day != null) {
+                String endTime = DateUtil.addOneday(creatTime, Integer.parseInt(day));
+                long time = DateUtil.timeDateStamp(endTime, null);
+                System.out.println(endTime + "#######" + time);
+                if (time != 0) {
+                    if (time > DateUtil.timeStamp()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
 }

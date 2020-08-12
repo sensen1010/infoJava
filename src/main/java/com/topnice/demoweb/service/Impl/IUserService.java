@@ -31,7 +31,10 @@ public class IUserService implements UsersService {
 
     @Override
     public Users login(Users users) {
-        Users user = userRepository.findAllByUserNameAndPassword(users.getUserName().trim(), users.getPassword().trim());
+        String userName = users.getUserName().trim();
+        String md5Str = DigestUtils.md5DigestAsHex(users.getPassword().trim().getBytes());
+        String pow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
+        Users user = userRepository.findAllByUserNameAndPassword(userName, pow);
         if (user == null) {
             return null;
         }
