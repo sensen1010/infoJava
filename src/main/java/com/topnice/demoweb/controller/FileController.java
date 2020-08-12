@@ -89,16 +89,15 @@ public class FileController {
      * @author: sen
      * @date: 2020/6/18 0018 12:30
      **/
-    @ApiOperation(value = "/update/state", notes = "修改图片表的状态,0正常 1禁用 2删除主机id，state")
-    @RequestMapping("/update/state")
-    private Map<String, Object> updateImg(String fileUrlId, String state) {
+    @ApiOperation(value = "/file/{fileUrlId}", notes = "修改图片表的状态,0正常 1禁用 2删除主机id，state")
+    @RequestMapping(value = "/file/{fileUrlId}",method = RequestMethod.DELETE)
+    private Map<String, Object> updateImg(@PathVariable("fileUrlId") String fileUrlId,String enterId,String state) {
         myMap = new HashMap<>();
-        FileUrl fileUrl = fileUrlService.findByFileUrlId(fileUrlId);
+        FileUrl fileUrl = fileUrlService.modifyFileState(fileUrlId, enterId, state);
         if (fileUrl == null || fileUrl.equals("")) {
             myMap.put("code", "1");
+            return myMap;
         } else {
-            fileUrl.setState(state);
-            fileUrlService.modifyFileTime(fileUrl);
             myMap.put("code", "0");
         }
         return myMap;

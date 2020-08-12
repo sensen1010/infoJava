@@ -10,10 +10,7 @@ import com.topnice.demoweb.token.service.TokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,16 +76,30 @@ public class UsersController {
     }
 
     @UserLoginToken
-    @ApiOperation(value = "/users", notes = "修改用户信息")
-    @RequestMapping(value = "/users", method = RequestMethod.PATCH)
-    public Map<String, String> update(Users users, String enterId) {
+    @ApiOperation(value = "/users/{userId}", notes = "修改用户信息")
+    @RequestMapping(value = "/users/{userId}", method = RequestMethod.PATCH)
+    public Map<String, String> update(@PathVariable("userId")String userId,String pow,String enterId) {
         mmap = new HashMap<>();
-        Users users1 = usersService.add(users, enterId);
+        Users users1 = usersService.modifyUser(userId, pow, enterId);
         if (users1 == null) {
             mmap.put("code", "1");
         } else {
             mmap.put("code", "0");
-            mmap.put("data", users1 + "");
+        }
+        return mmap;
+    }
+
+    @UserLoginToken
+    @ApiOperation(value = "/users/{userId}", notes = "删除用户")
+    @RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
+    public Map<String, String> delete(@PathVariable("userId") String userId,String state,String enterId) {
+        mmap = new HashMap<>();
+        Users users1 = usersService.modifyUserState(userId, state, enterId);
+        if (users1 == null) {
+            mmap.put("code", "1");
+            return mmap;
+        } else {
+            mmap.put("code", "0");
         }
         return mmap;
     }

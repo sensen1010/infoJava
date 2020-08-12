@@ -28,6 +28,13 @@ public interface FileUrlService {
     FileUrl modifyFileTime(FileUrl fileUrl);
 
     /**
+     * @desc: 修改文件状态
+     * @author: sen
+     * @date: 2020/8/12 0018 0:50
+     **/
+    FileUrl modifyFileState(String fileUrlId,String enterId,String state);
+
+    /**
      * @desc: 管理员根据企业Id\图片名称、状态分页查询
      * @author: sen
      * @date: 2020/6/18 0018 9:24

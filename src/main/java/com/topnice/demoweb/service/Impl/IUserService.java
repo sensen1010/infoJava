@@ -155,7 +155,28 @@ public class IUserService implements UsersService {
     }
 
     @Override
-    public Users modifyUser(String userId, String user) {
-        return null;
+    public Users modifyUser(String userId,String enterId,String pow) {
+
+        //根据企业id+用户id查询是否存在
+        Users users=userRepository.findAllByUserIdAndEnterId(userId, enterId);
+        if (users==null){
+            return null;
+        }
+        String md5Str = DigestUtils.md5DigestAsHex(pow.getBytes());
+        String newPow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
+        users.setPassword(newPow);
+        return userRepository.saveAndFlush(users);
+    }
+
+    @Override
+    public Users modifyUserState(String userId, String state, String enterId) {
+        //根据企业id+用户id查询是否存在
+        Users users=userRepository.findAllByUserIdAndEnterId(userId, enterId);
+        if (users==null){
+            return null;
+        }
+        users.setState(state);
+        userRepository.saveAndFlush(users);
+        return users;
     }
 }

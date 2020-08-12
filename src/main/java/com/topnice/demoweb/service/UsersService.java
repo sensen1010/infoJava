@@ -33,6 +33,8 @@ public interface UsersService {
      */
     Users findByUserIdAndEnterId(String userId, String enterId);
 
-    Users modifyUser(String userId,String user);
+    Users modifyUser(String userId,String enterId,String pow);
+
+    Users modifyUserState(String userId,String state,String enterId);
 
 }

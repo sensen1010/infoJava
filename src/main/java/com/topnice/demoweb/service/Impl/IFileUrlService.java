@@ -54,6 +54,22 @@ public class IFileUrlService implements FileUrlService {
         return fileUrlRepository.saveAndFlush(fileUrl);
     }
 
+    @Override
+    public FileUrl modifyFileState(String fileUrlId, String enterId, String state) {
+
+        Enterprise enterprise=enterpriseService.findByEnterId(enterId);
+        if (enterprise==null){
+            return null;
+        }
+        FileUrl fileUrl=fileUrlRepository.findAllByFileUrlId(fileUrlId);
+        if (fileUrl==null){
+            return null;
+        }
+        fileUrl.setState(state);
+
+        return fileUrlRepository.saveAndFlush(fileUrl);
+    }
+
 
     @Override
     public String findByFileNameAndStateAndType(String enterId, String fileName, String fileTypeId, String state, String page, String size) {
