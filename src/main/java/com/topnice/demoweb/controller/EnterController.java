@@ -25,13 +25,39 @@ public class EnterController {
     private Map<String, Object> map;
 
 
-    @ApiOperation(value = "/enter添加企业", tags = "添加企业")
+    @ApiOperation(value = "/企业注册", tags = "企业注册")
     @RequestMapping(value = "/enter", method = RequestMethod.POST)
-    private Map<String, Object> addEnter(Enterprise enterprise) {
+    private Map<String, Object> addEnter(Enterprise enterprise, String userName, String pow) {
         map = new HashMap<>();
-        String enter = enterpriseService.add(enterprise);
+        String enter = enterpriseService.add(enterprise, userName, pow);
         if (enter == null) {
             map.put("code", "1");
+            return map;
+        }
+        if (enter.equals("100")) {
+            map.put("code", "2");
+            return map;
+        }
+        if (enter.equals("101")) {
+            map.put("code", "3");
+            return map;
+        }
+        map.put("code", "0");
+        map.put("data", enter);
+        return map;
+    }
+
+    @ApiOperation(value = "/超级管理员添加企业", tags = "添加企业")
+    @RequestMapping(value = "/admin/enter", method = RequestMethod.POST)
+    private Map<String, Object> adminAddEnter(String enterName, String hostNum, String day, String userName, String pow, String userId) {
+        map = new HashMap<>();
+        String enter = enterpriseService.adminAdd(enterName, hostNum, day, userName, pow, userId);
+        if (enter == null) {
+            map.put("code", "1");
+            return map;
+        }
+        if (enter.equals("101")) {
+            map.put("code", "3");
             return map;
         }
         map.put("code", "0");
@@ -101,7 +127,14 @@ public class EnterController {
 
     @ApiOperation(value = "/enter/{enterId}根据id,更新某企业", tags = "根据id,更新某企业")
     @RequestMapping(value = "/enter/{enterId}", method = RequestMethod.PATCH)
-    private Map<String, Object> updateEnterId() {
+    private Map<String, Object> updateEnterId(@PathVariable("enterId") String enterId, String hostNum, String day, String userId) {
+        map = new HashMap<>();
+        Enterprise re = enterpriseService.modifyEnter(enterId, hostNum, day, userId);
+        if (re == null) {
+            map.put("cord", "1");
+            return map;
+        }
+        map.put("code", "0");
         return map;
     }
 

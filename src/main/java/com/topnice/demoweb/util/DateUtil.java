@@ -1,5 +1,6 @@
 package com.topnice.demoweb.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,6 +23,25 @@ public class DateUtil {
         return sdf.format(new Date(Long.valueOf(seconds + "000")));
     }
 
+    /**
+     * @desc: string转时间戳
+     * @author: sen
+     * @date: 2020/8/12 0012 10:54
+     **/
+    public static long timeDateStamp(String time, String format) {
+        if (format == null || format.isEmpty()) {
+            format = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        try {
+            Date dateStart = sdf.parse(time);
+            return (dateStart.getTime() / 1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public static String date2TimeStamp(Date date, String format) {
         if (date == null) {
             return "";
@@ -31,6 +51,17 @@ public class DateUtil {
         }
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
+    }
+
+    public static String addOneday(String today, int i) {
+        try {
+            long time = Long.parseLong(today) + 24 * 3600 * i;
+
+            return timeStamp2Date(time + "", null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return today;
+        }
     }
 
     /**
@@ -54,10 +85,10 @@ public class DateUtil {
      *
      * @return
      */
-    public static String timeStamp() {
+    public static int timeStamp() {
         long time = System.currentTimeMillis();
         String t = String.valueOf(time / 1000);
-        return t;
+        return (int) (time / 1000);
     }
 
     /**

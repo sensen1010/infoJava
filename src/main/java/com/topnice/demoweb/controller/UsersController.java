@@ -3,6 +3,7 @@ package com.topnice.demoweb.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.topnice.demoweb.entity.Users;
+import com.topnice.demoweb.service.EnterpriseService;
 import com.topnice.demoweb.service.UsersService;
 import com.topnice.demoweb.token.annotation.UserLoginToken;
 import com.topnice.demoweb.token.service.TokenService;
@@ -29,22 +30,26 @@ public class UsersController {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    EnterpriseService enterpriseService;
+
     private Map<String, String> mmap;
 
     @ApiOperation(value = "login", notes = "登录接口")
     @RequestMapping("/login")
     public Map<String, String> login(Users users) {
-        System.out.println(users);
         mmap = new HashMap<>();
+        //返回  1：账号密码错误  2：使用时间超时 0：登录成功
         Users data = usersService.login(users);
         if (data == null) {
             mmap.put("code", "1");
             return mmap;
         } else {
-            if (!data.getPassword().equals(users.getPassword())) {
-                mmap.put("code", "1");
+            boolean check = enterpriseService.checkEnter(data.getEnterId());
+            if (!check) {
+                mmap.put("code", "2");
                 return mmap;
-            }else {
+            }
                 String token = tokenService.getToken(data);
                 mmap.put("code", "0");
                 mmap.put("token", token);
@@ -56,7 +61,6 @@ public class UsersController {
                 map.put("userType", data.getType());
                 mmap.put("data", JSONObject.toJSONString(map));
                 return mmap;
-            }
         }
     }
 

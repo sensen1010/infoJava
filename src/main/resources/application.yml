@@ -25,7 +25,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
+  #INTERNET
+info:
+  type: INTERNET
 
 files:
   path: ${file-path:f:/files}

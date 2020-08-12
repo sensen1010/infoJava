@@ -1,9 +1,11 @@
 package com.topnice.demoweb.controller;
 
 
+import com.topnice.demoweb.service.EnterpriseService;
 import com.topnice.demoweb.token.annotation.UserLoginToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +19,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/token")
 public class TokenController {
+
+    @Autowired
+    EnterpriseService enterpriseService;
 
     @UserLoginToken
     @ApiOperation(value = "判断token是否过期", notes = "token")
