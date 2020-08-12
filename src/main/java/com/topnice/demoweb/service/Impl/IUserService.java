@@ -157,8 +157,12 @@ public class IUserService implements UsersService {
     @Override
     public Users modifyUser(String userId,String enterId,String pow) {
 
+        Enterprise enterprise=enterRepository.findAllByEnterId(enterId);
+        if (enterprise==null){
+            return null;
+        }
         //根据企业id+用户id查询是否存在
-        Users users=userRepository.findAllByUserIdAndEnterId(userId, enterId);
+        Users users=userRepository.findAllByUserId(userId);
         if (users==null){
             return null;
         }

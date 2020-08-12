@@ -80,7 +80,7 @@ public class UsersController {
     @RequestMapping(value = "/users/{userId}", method = RequestMethod.PATCH)
     public Map<String, String> update(@PathVariable("userId")String userId,String pow,String enterId) {
         mmap = new HashMap<>();
-        Users users1 = usersService.modifyUser(userId, pow, enterId);
+        Users users1 = usersService.modifyUser(userId, enterId, pow);
         if (users1 == null) {
             mmap.put("code", "1");
         } else {
