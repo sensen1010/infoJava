@@ -12,7 +12,7 @@ public interface HostsService {
     String findHost(String enterId, String hostName,String linkState,String state, String page, String size);
 
     //超级管理员查询
-    String findHosts(String hostName, String state, String linkState, String page, String size);
+    String findHosts(String enterId, String hostName, String linkState, String page, String size);
 
     //修改主机的名称、普通管理员+超级管理员
     Hosts modifyHostName(String hostId, String hostName);

@@ -17,6 +17,8 @@ public interface ProHisRepository extends JpaRepository<ProHis, Integer> {
 
     Page<ProHis> findAllByEnterIdAndNameContaining(String enterId,String name,Pageable pageable);
 
+    Page<ProHis> findAllByEnterIdContainingAndNameContaining(String enterId, String name, Pageable pageable);
+
 
 
 }

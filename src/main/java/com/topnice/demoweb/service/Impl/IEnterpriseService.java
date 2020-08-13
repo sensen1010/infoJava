@@ -269,11 +269,11 @@ public class IEnterpriseService implements EnterpriseService {
         } else {
             String creatTime = EnterUtil.decrypt(enterprise.getEnterTimeAuth());
             String day = EnterUtil.decrypt(enterprise.getEnterDayAuth());
-            System.out.println(creatTime + "#####" + day);
+            // System.out.println(creatTime + "#####" + day);
             if (creatTime != null && day != null) {
                 String endTime = DateUtil.addOneday(creatTime, Integer.parseInt(day));
                 long time = DateUtil.timeDateStamp(endTime, null);
-                System.out.println(endTime + "#######" + time);
+                //System.out.println(endTime + "#######" + time);
                 if (time != 0) {
                     if (time > DateUtil.timeStamp()) {
                         return true;

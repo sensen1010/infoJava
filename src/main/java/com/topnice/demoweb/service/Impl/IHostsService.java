@@ -2,7 +2,9 @@ package com.topnice.demoweb.service.Impl;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.topnice.demoweb.entity.Enterprise;
 import com.topnice.demoweb.entity.Hosts;
+import com.topnice.demoweb.repository.EnterRepository;
 import com.topnice.demoweb.repository.HostsRepository;
 import com.topnice.demoweb.service.HostsService;
 import com.topnice.demoweb.util.DateUtil;
@@ -22,6 +24,10 @@ public class IHostsService implements HostsService {
 
     @Autowired
     private HostsRepository hostsRepository;
+
+    @Autowired
+    private EnterRepository enterRepository;
+
 
     List<Map<String, Object>> lists;
     List<Map<String, String>> list;
@@ -82,9 +88,9 @@ public class IHostsService implements HostsService {
      * @date: 2020/6/19 0019 9:29
      **/
     @Override
-    public String findHosts(String hostName, String state, String linkState, String page, String size) {
+    public String findHosts(String enterId, String hostName, String linkState, String page, String size) {
+        enterId = enterId == null || enterId.equals("") ? "" : enterId;
         hostName = hostName == null || hostName.equals("") ? "" : hostName;
-        state = state == null || state.equals("") ? "" : state;
         linkState = linkState == null || linkState.equals("") ? "" : linkState;
         //如果为null默认为0
         Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
@@ -94,7 +100,7 @@ public class IHostsService implements HostsService {
         //PageRequest的对象构造函数有多个，page是页数，初始值是0，size是查询结果的条数，后两个参数参考Sort对象的构造方法
         // Pageable pageable = new PageRequest(page, size, Sort.Direction.DESC, "id");旧方法 已弃用
         Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "id");
-        Page<Hosts> all = hostsRepository.findAllByHostNameContainingAndHostStateContainingAndLinkStateContaining(hostName, state, linkState, pageable);
+        Page<Hosts> all = hostsRepository.findAllByEnterIdContainingAndHostNameContainingAndLinkStateContaining(enterId, hostName, linkState, pageable);
 
         lists = new ArrayList<>();
         list = new ArrayList<>();
@@ -169,6 +175,8 @@ public class IHostsService implements HostsService {
         map.put("id", hosts.getId() + "");
         map.put("hostId", hosts.getHostId());
         map.put("hostName", hosts.getHostName());
+        Enterprise enterprise = enterRepository.findAllByEnterId(hosts.getEnterId());
+        map.put("enterName", enterprise.getEnterName());
         map.put("hostLinkId", hosts.getHostLinkId());
         map.put("creationTime", DateUtil.date2TimeStamp(hosts.getCreationTime(), "yyyy-MM-dd HH:mm:ss") + "");
         map.put("linkTime", DateUtil.date2TimeStamp(hosts.getLinkTime(), "yyyy-MM-dd HH:mm:ss") + "");

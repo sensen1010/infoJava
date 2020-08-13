@@ -71,6 +71,7 @@ public class FileController {
         myMap.put("code", "0");
         return myMap;
     }
+
     @ApiOperation(value = "/fileTyList", notes = "查询类型为jpg、png、MP4的文件")
     @RequestMapping("/fileTyList")
     private Map<String, Object> selectIsImgList(String typeId, String page, String size) {

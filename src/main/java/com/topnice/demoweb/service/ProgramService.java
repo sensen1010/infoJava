@@ -12,7 +12,10 @@ public interface ProgramService {
     Program modifyPro(String proId, String enterId, String content, String contentHtml);
 
     //企业根据节目名称查询节目
-    String enterFindByName(String enterId, String name, String page, String size);
+    String enterFindByName(String enterId, String state, String name, String page, String size);
+
+    //超级管理员根据节目名称查询节目
+    String adminFindByName(String enterId, String state, String name, String page, String size);
 
     //企业根据节目id查询节目
     String enterFindByProgramId(String enterId, String programId);
@@ -22,6 +25,9 @@ public interface ProgramService {
 
     //修改节目
     Program modifyProgram(Program program);
+
+    //修改节目状态
+    Program modifyProgramState(String proId, String state);
 
 
 }

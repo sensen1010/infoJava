@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,9 +58,32 @@ public class ProgramController {
 
     @ApiOperation(value = "/pro/{enterId},根据企业Id查询节目", notes = "查询节目")
     @RequestMapping(value = "/pro/{enterId}", method = RequestMethod.GET)
-    private Map<String, String> enterSelectProgram(@PathVariable("enterId") String enterId, String name, String page, String size) {
+    private Map<String, String> enterSelectProgram(@PathVariable("enterId") String enterId, String state, String name, String page, String size) {
         map = new HashMap<>();
-        map.put("data", programService.enterFindByName(enterId, name, page, size) + "");
+        map.put("data", programService.enterFindByName(enterId, state, name, page, size) + "");
+        return map;
+    }
+
+    @ApiOperation(value = "/pro/{proId},根据企业Id删除节目", notes = "删除节目")
+    @RequestMapping(value = "/pro/{proId}", method = RequestMethod.DELETE)
+    private Map<String, String> enterDeleteProgram(@PathVariable("proId") String proId, String state) {
+        map = new HashMap<>();
+        Program program = programService.modifyProgramState(proId, state);
+        System.out.println(program);
+        if (program == null) {
+            map.put("code", "1");
+            return map;
+        }
+        map.put("code", "0");
+        return map;
+    }
+
+
+    @ApiOperation(value = "/pro/admin,超级管理员查询节目", notes = "查询节目")
+    @RequestMapping(value = "/pro/admin", method = RequestMethod.GET)
+    private Map<String, String> adminSelectProgram(String enterId, String state, String name, String page, String size) {
+        map = new HashMap<>();
+        map.put("data", programService.adminFindByName(enterId, state, name, page, size) + "");
         return map;
     }
 
@@ -95,5 +117,12 @@ public class ProgramController {
         return map;
     }
 
+    @ApiOperation(value = "/proHis/admin", notes = "超级管理员查询发布节目历史")
+    @RequestMapping(value = "/proHis/admin", method = RequestMethod.GET)
+    private Map<String, String> adminSelectProHis(String enterId, String name, String page, String size) {
+        map = new HashMap<>();
+        map.put("data", proHisService.adminFindByName(enterId, name, page, size));
+        return map;
+    }
 
 }

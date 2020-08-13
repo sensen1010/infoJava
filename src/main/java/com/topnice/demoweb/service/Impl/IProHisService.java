@@ -12,7 +12,6 @@ import com.topnice.demoweb.service.ProHisService;
 import com.topnice.demoweb.service.UsersService;
 import com.topnice.demoweb.service.WebSocketServer;
 import com.topnice.demoweb.util.DateUtil;
-import org.apache.catalina.Host;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -149,30 +148,58 @@ public class IProHisService implements ProHisService {
             List<Map<String, String>> list = new ArrayList<>();
             Map<String, Object> maps = new HashMap<>();
             for (ProHis program : programs) {
-                Map<String, String> map = new HashMap<>();
-                map.put("id", program.getId() + "");
-                map.put("name", program.getName());
-                map.put("content", program.getContent());
-                map.put("contentHtml", program.getContentHtml());
-                map.put("layoutType", program.getLayoutType());
-                map.put("proHisId", program.getProHisId());
-                map.put("creationTime", DateUtil.date2TimeStamp(program.getCreationTime(), "yyyy-MM-dd HH:mm"));
-                List<ProHisH> proHisHES=proHisHRepository.findAllByProHisId(program.getProHisId());
-               if (proHisHES!=null){
-                   List<Map<String,String>> proList=new ArrayList<>();
-                   for (ProHisH proHisH:proHisHES){
-                       Hosts hosts=hostsRepository.findAllByHostId(proHisH.getHostId());
-                       Map<String, String> proMap= new HashMap<>();
-                       proMap.put("hostId",hosts.getHostId()+ "");
-                       proMap.put("name",hosts.getHostName()+ "");
-                       proList.add(proMap);
-                   }
-                   map.put("hostList",JSONObject.toJSONString(proList));
-                }
-                Users users=usersService.findByUserId(program.getUserId());
-                map.put("userName",users.getName()+"("+users.getUserName()+")");
-                map.put("type", program.getType());//0 全部  1部分
-                list.add(map);
+                list.add(proHisMap(program));
+            }
+        maps.put("size", programs.getTotalElements());
+        maps.put("data", JSONObject.toJSONString(list));
+        lists.add(maps);
+        return JSONObject.toJSONString(lists);
+    }
+
+    public Map<String, String> proHisMap(ProHis program) {
+        Map<String, String> map = new HashMap<>();
+        map.put("id", program.getId() + "");
+        map.put("name", program.getName());
+        map.put("content", program.getContent());
+        Enterprise enterprise = enterpriseService.findByEnterId(program.getEnterId());
+        map.put("enterName", enterprise.getEnterName());
+        map.put("contentHtml", program.getContentHtml());
+        map.put("layoutType", program.getLayoutType());
+        map.put("proHisId", program.getProHisId());
+        map.put("creationTime", DateUtil.date2TimeStamp(program.getCreationTime(), "yyyy-MM-dd HH:mm"));
+        List<ProHisH> proHisHES = proHisHRepository.findAllByProHisId(program.getProHisId());
+        if (proHisHES != null) {
+            List<Map<String, String>> proList = new ArrayList<>();
+            for (ProHisH proHisH : proHisHES) {
+                Hosts hosts = hostsRepository.findAllByHostId(proHisH.getHostId());
+                Map<String, String> proMap = new HashMap<>();
+                proMap.put("hostId", hosts.getHostId() + "");
+                proMap.put("name", hosts.getHostName() + "");
+                proList.add(proMap);
+            }
+            map.put("hostList", JSONObject.toJSONString(proList));
+        }
+        Users users = usersService.findByUserId(program.getUserId());
+        map.put("userName", users.getName() + "(" + users.getUserName() + ")");
+        map.put("type", program.getType());//0 全部  1部分
+        return map;
+    }
+
+    @Override
+    public String adminFindByName(String enterId, String name, String page, String size) {
+        enterId = enterId == null || enterId.equals("") ? "" : enterId;
+        name = name == null || name.equals("") ? "" : name;
+        //如果为null默认为0
+        Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
+        //如果为null默认为10
+        Integer rsize = size == null || size.equals("") ? 5 : Integer.parseInt(size);
+        Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "id");
+        Page<ProHis> programs = proHisRepository.findAllByEnterIdContainingAndNameContaining(enterId, name, pageable);
+        List<Map<String, Object>> lists = new ArrayList<>();
+        List<Map<String, String>> list = new ArrayList<>();
+        Map<String, Object> maps = new HashMap<>();
+        for (ProHis program : programs) {
+            list.add(proHisMap(program));
         }
         maps.put("size", programs.getTotalElements());
         maps.put("data", JSONObject.toJSONString(list));

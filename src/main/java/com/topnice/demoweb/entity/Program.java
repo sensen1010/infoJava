@@ -9,7 +9,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @DynamicUpdate
@@ -33,6 +32,8 @@ public class Program implements Serializable {
     private String userId;//发布人id
 
     private String layoutType;//布局类型
+
+    private String state;
 
     @Lob
     @Column(columnDefinition = "text")

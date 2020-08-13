@@ -41,9 +41,9 @@ public class HostsController {
     }
     @ApiOperation(value = "/select", tags = "超级管理员查询所有主机列表")
     @RequestMapping("/select")
-    private Map<String, Object> selectHosts(String hostName, String hostState, String linkState, String page, String size) {
+    private Map<String, Object> selectHosts(String enterId, String hostName, String linkState, String page, String size) {
         map = new HashMap<>();
-        String data = hostsService.findHosts(hostName, hostState, linkState, page, size);
+        String data = hostsService.findHosts(enterId, hostName, linkState, page, size);
         map.put("data", data + "");
         return map;
     }

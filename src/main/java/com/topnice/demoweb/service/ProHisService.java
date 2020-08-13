@@ -14,5 +14,8 @@ public interface ProHisService {
     //企业根据节目名称查询历史
     String enterFindByName(String enterId,String name,String page,String size);
 
+    //超级管理员查询节目
+    String adminFindByName(String enterId, String name, String page, String size);
+
 
 }

@@ -16,13 +16,13 @@ public interface ProgramRepository extends JpaRepository<Program, Integer> {
 
     Page<Program> findAllByNameContaining(String name, Pageable pageable);
 
-    Page<Program> findAllByEnterIdAndNameContaining(String enterId, String name, Pageable pageable);
+    Page<Program> findAllByEnterIdAndStateAndNameContaining(String enterId, String state, String name, Pageable pageable);
+
+    Page<Program> findAllByEnterIdContainingAndStateAndNameContaining(String enterId, String state, String name, Pageable pageable);
 
     Program findAllByProId(String proId);
 
     Program findAllByProIdAndEnterId(String proId, String enterId);
-
-
 
 
 }
