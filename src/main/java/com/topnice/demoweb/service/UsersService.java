@@ -28,6 +28,7 @@ public interface UsersService {
      * 根据账号、企业id查询是否存在
      */
     Users findByUserNameAndEnterId(String userName, String enterId);
+
     /**
      * 根据用户id、企业id查询是否存在
      */
@@ -37,4 +38,11 @@ public interface UsersService {
 
     Users modifyUserState(String userId,String state,String enterId);
 
+    /**
+     * 根据账号查询企业
+     *
+     * @param userName
+     * @return
+     */
+    Users findByUserName(String userName);
 }

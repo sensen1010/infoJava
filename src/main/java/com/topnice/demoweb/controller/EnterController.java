@@ -47,6 +47,24 @@ public class EnterController {
         return map;
     }
 
+    @ApiOperation(value = "/企业激活", tags = "企业激活")
+    @RequestMapping(value = "/enter/regist", method = RequestMethod.POST)
+    private Map<String, Object> registEnter(String no, String code) {
+        map = new HashMap<>();
+        String reMsg = enterpriseService.registEnter(no, code);
+        if (reMsg == null) {
+            map.put("code", "1");
+            return map;
+        } else if (reMsg.equals("-1")) {
+            map.put("code", "-1");
+            return map;
+        } else if (reMsg.equals("ok")) {
+            map.put("code", "0");
+            return map;
+        }
+        return map;
+    }
+
     @ApiOperation(value = "/超级管理员添加企业", tags = "添加企业")
     @RequestMapping(value = "/admin/enter", method = RequestMethod.POST)
     private Map<String, Object> adminAddEnter(String enterName, String hostNum, String day, String userName, String pow, String userId) {

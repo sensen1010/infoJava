@@ -4,6 +4,7 @@ package com.topnice.demoweb.service;
 import com.alibaba.fastjson.JSON;
 import com.topnice.demoweb.entity.Enterprise;
 import com.topnice.demoweb.entity.Hosts;
+import com.topnice.demoweb.util.EnterUtil;
 import com.topnice.demoweb.util.WebSocketUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -62,7 +63,7 @@ public class WebSocketServer {
 
 
     private  static HostsService hostsService;
-    @Autowired
+
     private  static EnterpriseService enterpriseService;
 
     @Autowired
@@ -104,13 +105,27 @@ public class WebSocketServer {
         //先判断企业是否存在
         Enterprise enterprise=enterpriseService.findByEnterId(enterId);
         if (enterprise==null){
-            sendMessage("{type:'-1'.data:''}");
+            sendMessage("{type:'-1',data:''}");
             return;
         }
-        //判断主机是否已保存
+
+            //判断主机是否已保存
          Hosts hosts=hostsService.findEnterIdAndHostLinkId(enterId,linkId);
         if (hosts==null){
-            hostsService.add(hostId,linkId,name,enterId);
+            //判断是否还可以添加主机
+            //获取企业主机数量
+            String hostNum = EnterUtil.decrypt(enterprise.getHostNumAuth());
+            //查询当前企业添加的主机数量
+            int num = hostsService.findEnterHostNum(enterId);
+            int enterHostNum = Integer.parseInt(hostNum);
+            if (num <= enterHostNum) {
+                //不超出，添加主机
+                hostsService.add(hostId, linkId, name, enterId);
+            } else {
+                sendMessage("{type:'-2',data:''}");
+                return;
+            }
+
         }else {
             updateHostState(enterId,linkId,"0");
         }
@@ -137,8 +152,6 @@ public class WebSocketServer {
             enterMap.put(enterId, webSocketMap);
             addOnlineCount();
         }
-
-
 
         System.out.println("当前用户id：" + linkId);
         //判断该链接是否存在

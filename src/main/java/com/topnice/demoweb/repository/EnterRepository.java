@@ -22,4 +22,6 @@ public interface EnterRepository extends JpaRepository<Enterprise, Integer> {
 
     List<Enterprise> findAllByStateContaining(String state);
 
+    Enterprise findAllByEnterIdAndDefaultUserId(String enterId, String defaultUserId);
+
 }

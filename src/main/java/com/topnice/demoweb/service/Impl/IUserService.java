@@ -183,4 +183,10 @@ public class IUserService implements UsersService {
         userRepository.saveAndFlush(users);
         return users;
     }
+
+    @Override
+    public Users findByUserName(String userName) {
+
+        return userRepository.findAllByUserName(userName);
+    }
 }

@@ -64,6 +64,10 @@ public class IClientUpdateService implements ClientUpdateService {
     @Override
     public String findLastOne() {
         ClientUpdate clientUpdate = clientUpdateRepository.findLastOne();
+        if (clientUpdate == null) {
+            return null;
+        }
+
         Map<String, String> m = new HashMap<>();
         m.put("clientId", clientUpdate.getClientId());
         m.put("apkName", clientUpdate.getApkName());

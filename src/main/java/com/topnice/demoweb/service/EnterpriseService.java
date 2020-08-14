@@ -28,4 +28,7 @@ public interface EnterpriseService {
     //判断企业是否可使用
     boolean checkEnter(String enterId);
 
+    //企业激活
+    String registEnter(String no, String code);
+
 }

@@ -31,4 +31,7 @@ public interface HostsService {
 
     //根据企业id、链接id是否存在
     Hosts findEnterIdAndHostLinkId(String enterId,String hostLinkId);
+
+    //根据企业id，查询企业主机数量
+    int findEnterHostNum(String enterId);
 }

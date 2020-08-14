@@ -164,6 +164,15 @@ public class IHostsService implements HostsService {
     public Hosts findEnterIdAndHostLinkId(String enterId, String hostLinkId) {
         return hostsRepository.findAllByEnterIdAndHostLinkId(enterId, hostLinkId);
     }
+
+    @Override
+    public int findEnterHostNum(String enterId) {
+
+        int num = hostsRepository.countAllByEnterId(enterId);
+
+        return num;
+    }
+
     Map<String, String> hostsListMap(Hosts hosts) {
         Map<String, String> map = new HashMap<>();
         map.put("hostId", hosts.getHostId());

@@ -21,7 +21,8 @@ public class EnterUtil {
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
 
     public static void main(String[] args) throws Exception {
-        String content = "9999";
+        // String content = "9999";
+        String content = "{no:'wuhuasen',day:'20',hostNum:'20'}";
         System.out.println("加密前：" + content);
 
         System.out.println("加密密钥和解密密钥：" + KEY);

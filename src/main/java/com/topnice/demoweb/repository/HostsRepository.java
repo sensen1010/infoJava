@@ -36,6 +36,9 @@ public interface HostsRepository extends JpaRepository<Hosts, Integer> {
     //根据企业id、连接id查询
     List<Hosts> findAllByEnterIdAndLinkStateAndHostState(String enterId, String linkState, String hostState);
 
+    //查询企业主机数量
+    int countAllByEnterId(String enterId);
+
     @Modifying
     @Query(value ="update Hosts set link_state='1' WHERE link_state='0'",nativeQuery = true)
     void updateAllHostLinkState();

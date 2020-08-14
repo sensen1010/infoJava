@@ -61,6 +61,7 @@ public class IEnterpriseService implements EnterpriseService {
         enterprise.setEnterTimeAuth(EnterUtil.encryption(date + ""));
         enterprise.setCreationTime(new Date());
         enterprise.setState("0");
+
         Enterprise reEnter = enterRepository.save(enterprise);
 
 
@@ -282,6 +283,52 @@ public class IEnterpriseService implements EnterpriseService {
             }
         }
         return false;
+    }
+
+    @Override
+    public String registEnter(String no, String code) {
+        //code解密后格式   {no:'',day:'',hostNum:''}
+        //解密注册码
+        String registCode = EnterUtil.decrypt(code);
+        System.out.println("解析的数据" + registCode);
+        if (registCode == null) {
+            return null;
+        }
+        //json解析
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(registCode);
+            String regNo = jsonObject.getString("no");
+            String regDay = jsonObject.getString("day");
+            String regHostNum = jsonObject.getString("hostNum");
+            if (!regNo.equals(no)) {
+                return null;
+            } else {
+                System.out.println("进入账号");
+                //根据id查询企业id
+                Users users = usersService.findByUserName(no);
+                if (users == null) {
+                    return null;
+                }
+                System.out.println("进入查询企业");
+                //根据企业id查询企业
+                Enterprise enterprise = enterRepository.findAllByEnterIdAndDefaultUserId(users.getEnterId(), users.getUserId());
+                if (enterprise == null) {
+                    return null;
+                }
+                System.out.println("进入判断企业");
+                if (enterprise.getState().equals("1")) {
+                    return "-1";
+                }
+                System.out.println("写数据");
+                enterprise.setEnterDayAuth(EnterUtil.encryption(regDay));
+                enterprise.setHostNumAuth(EnterUtil.encryption(regHostNum));
+                enterRepository.saveAndFlush(enterprise);
+                return "ok";
+            }
+        } catch (Exception e) {
+
+            return null;
+        }
     }
 
 

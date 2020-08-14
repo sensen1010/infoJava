@@ -1,5 +1,7 @@
 package com.topnice.demoweb.config;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -9,7 +11,14 @@ public class test2 {
 
     public static void main(String[] args) {
 
-        showView();
+        // showView();
+        String asd = "asdsadasdda,asdasd";
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(asd);
+        } catch (Exception e) {
+            System.out.println("asd");
+        }
+
 
     }
 
