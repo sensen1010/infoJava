@@ -42,7 +42,4 @@ files:
 server:
   tomcat:
     uri-encoding: UTF-8
-    #上传文件地址
-prop:
-  upload-folder: E:\imgfile\
 

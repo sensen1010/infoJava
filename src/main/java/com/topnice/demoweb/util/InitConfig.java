@@ -11,6 +11,8 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * @desc: 项目启动时执行
@@ -48,8 +50,12 @@ public class InitConfig implements ApplicationRunner {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        try {
+            InetAddress address = InetAddress.getLocalHost();
+            System.out.println("http://" + address.getHostAddress() + ":8080/");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
-
-        log.info("项目启动初始化结束ApplicationRunner");
     }
 }

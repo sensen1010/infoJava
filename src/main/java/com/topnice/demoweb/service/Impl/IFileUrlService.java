@@ -80,7 +80,7 @@ public class IFileUrlService implements FileUrlService {
         //如果为null默认为0
         Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
         //如果为null默认为10
-        Integer rsize = size == null || size.equals("") ? 32 : Integer.parseInt(size);
+        Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
         Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "updateTime");
 
         Page<FileUrl> reFileUrl = fileUrlRepository.findAllByEnterIdAndFileNameContainingAndFileTypeIdContainingAndStateContaining(enterId, fileName, fileTypeId, state, pageable);
@@ -101,7 +101,7 @@ public class IFileUrlService implements FileUrlService {
         //如果为null默认为0
         Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
         //如果为null默认为10
-        Integer rsize = size == null || size.equals("") ? 32 : Integer.parseInt(size);
+        Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
         //Pageable是接口，PageRequest是接口实现
         //PageRequest的对象构造函数有多个，page是页数，初始值是0，size是查询结果的条数，后两个参数参考Sort对象的构造方法
         // Pageable pageable = new PageRequest(page, size, Sort.Direction.DESC, "id");旧方法 已弃用

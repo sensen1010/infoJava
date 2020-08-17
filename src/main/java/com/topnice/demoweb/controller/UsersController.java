@@ -4,6 +4,7 @@ package com.topnice.demoweb.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.topnice.demoweb.entity.Users;
 import com.topnice.demoweb.service.EnterpriseService;
+import com.topnice.demoweb.service.InfoMonService;
 import com.topnice.demoweb.service.UsersService;
 import com.topnice.demoweb.token.annotation.UserLoginToken;
 import com.topnice.demoweb.token.service.TokenService;
@@ -29,6 +30,9 @@ public class UsersController {
 
     @Autowired
     EnterpriseService enterpriseService;
+
+    @Autowired
+    InfoMonService infoMonService;
 
     private Map<String, String> mmap;
 
@@ -57,6 +61,7 @@ public class UsersController {
                 map.put("userId", data.getUserId());
                 map.put("userType", data.getType());
                 mmap.put("data", JSONObject.toJSONString(map));
+            infoMonService.callService(data.getEnterId());
                 return mmap;
         }
     }

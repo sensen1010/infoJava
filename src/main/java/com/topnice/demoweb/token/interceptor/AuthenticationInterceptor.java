@@ -34,10 +34,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
         String path = httpServletRequest.getServletPath();
         String mode = httpServletRequest.getMethod();
-
-
-        System.out.println("请求路径：" + path);
-        System.out.println("请求方式：" + mode);
+//        System.out.println("请求路径：" + path);
+//        System.out.println("请求方式：" + mode);
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;

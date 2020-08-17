@@ -20,21 +20,21 @@ public class EnterUtil {
      */
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
 
-    public static void main(String[] args) throws Exception {
-        // String content = "9999";
-        String content = "{no:'wuhuasen',day:'20',hostNum:'20'}";
-        System.out.println("加密前：" + content);
-
-        System.out.println("加密密钥和解密密钥：" + KEY);
-
-        String encrypt = aesEncrypt(content, KEY);
-        System.out.println("加密后：" + encrypt);
-
-        //String decrypt = aesDecrypt(encrypt+"adasd", KEY);
-        String decrypt = decrypt("Z6ZgRAT34RulCDOhlRs3Ow==");
-
-        System.out.println("解密后：" + decrypt);
-    }
+//    public static void main(String[] args) throws Exception {
+//        // String content = "9999";
+//        String content = "{no:'wuhuasen',day:'20',hostNum:'20'}";
+//        System.out.println("加密前：" + content);
+//
+//        System.out.println("加密密钥和解密密钥：" + KEY);
+//
+//        String encrypt = aesEncrypt(content, KEY);
+//        System.out.println("加密后：" + encrypt);
+//
+//        //String decrypt = aesDecrypt(encrypt+"adasd", KEY);
+//        String decrypt = decrypt("Z6ZgRAT34RulCDOhlRs3Ow==");
+//
+//        System.out.println("解密后：" + decrypt);
+//    }
 
     public static String encryption(String content) {
         String encrypt = null;

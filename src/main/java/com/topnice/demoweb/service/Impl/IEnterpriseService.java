@@ -303,25 +303,22 @@ public class IEnterpriseService implements EnterpriseService {
             if (!regNo.equals(no)) {
                 return null;
             } else {
-                System.out.println("进入账号");
                 //根据id查询企业id
                 Users users = usersService.findByUserName(no);
                 if (users == null) {
                     return null;
                 }
-                System.out.println("进入查询企业");
                 //根据企业id查询企业
                 Enterprise enterprise = enterRepository.findAllByEnterIdAndDefaultUserId(users.getEnterId(), users.getUserId());
                 if (enterprise == null) {
                     return null;
                 }
-                System.out.println("进入判断企业");
                 if (enterprise.getState().equals("1")) {
                     return "-1";
                 }
-                System.out.println("写数据");
                 enterprise.setEnterDayAuth(EnterUtil.encryption(regDay));
                 enterprise.setHostNumAuth(EnterUtil.encryption(regHostNum));
+                enterprise.setEnterAuth(code);
                 enterRepository.saveAndFlush(enterprise);
                 return "ok";
             }

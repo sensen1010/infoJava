@@ -9,7 +9,6 @@ import com.topnice.demoweb.repository.ClientUpdateRepository;
 import com.topnice.demoweb.service.*;
 import com.topnice.demoweb.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,8 +21,9 @@ import java.util.*;
 @Transactional
 public class IFileUpService implements FileUpService {
 
-    @Value("${prop.upload-folder}")
-    private String UPLOAD_FOLDER;
+
+    private String UPLOAD_FOLDER = System.getProperty("user.dir");
+    private String PATH = "\\webapps\\file\\";
 
     @Autowired
     FileUrlService fileUrlService;
@@ -84,7 +84,9 @@ public class IFileUpService implements FileUpService {
                     String fileName = fileMd5 + "." + upFileType;
                     String uuidFile = UUID.randomUUID().toString().replace("-", "");
                     //设置文件路径，
-                    String filePath = UPLOAD_FOLDER + newFilePath;
+                    int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
+                    String upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
+                    String filePath = upFileUrl + newFilePath;
                     File targetFile = new File(filePath);
                     if (!targetFile.exists()) {
                         targetFile.mkdirs();
@@ -146,7 +148,7 @@ public class IFileUpService implements FileUpService {
             e.printStackTrace();
         }
         try {
-            System.out.println(apkMd5);
+            //  System.out.println(apkMd5);
             //查询该apk是否存在，若存在，则添加记录、不上传文件
             List<ClientUpdate> clientUpdate = clientUpdateRepository.findAllByApkMd5(apkMd5);
             if (clientUpdate.size() < 1) {
@@ -154,7 +156,9 @@ public class IFileUpService implements FileUpService {
                 String fileName = apkMd5 + "." + upApkType;
                 String uuidFile = UUID.randomUUID().toString().replace("-", "");
                 //设置文件路径，
-                String filePath = UPLOAD_FOLDER;
+                int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
+                String upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
+                String filePath = upFileUrl;
                 File targetFile = new File(filePath);
                 if (!targetFile.exists()) {
                     targetFile.mkdirs();
@@ -214,7 +218,9 @@ public class IFileUpService implements FileUpService {
             String uuidFile = UUID.randomUUID().toString().replace("-", "");
             String fileName = uuidFile + "." + upFileType;
             //设置文件路径，
-            String filePath = UPLOAD_FOLDER + newFilePath;
+            int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
+            String upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
+            String filePath = upFileUrl + newFilePath;
             File targetFile = new File(filePath);
             if (!targetFile.exists()) {
                 targetFile.mkdirs();
