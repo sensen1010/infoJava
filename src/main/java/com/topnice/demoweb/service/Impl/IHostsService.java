@@ -40,13 +40,13 @@ public class IHostsService implements HostsService {
     @Override
     public Hosts add(String hostIp,String hostLinkId, String hostName, String enterId) {
         hostLinkId = hostLinkId == null || hostLinkId.equals("") ? "" : hostLinkId;
-
             Hosts hosts = new Hosts();
             hosts.setEnterId(enterId);
             hosts.setHostState("0");
             hosts.setHostName(hostName);
             hosts.setHostIp(hostIp);
             hosts.setHostLinkId(hostLinkId);
+        hosts.setLinkTime(new Date());
             hosts.setCreationTime(new Date());
             hosts.setLinkState("0");
             hosts.setHostId(UUID.randomUUID().toString().replace("-", ""));
@@ -171,6 +171,14 @@ public class IHostsService implements HostsService {
         int num = hostsRepository.countAllByEnterId(enterId);
 
         return num;
+    }
+
+    @Override
+    public void deleteHost(String hostId) {
+
+        Hosts hosts = hostsRepository.findAllByHostId(hostId);
+
+        hostsRepository.delete(hosts);
     }
 
     Map<String, String> hostsListMap(Hosts hosts) {

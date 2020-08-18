@@ -1,7 +1,10 @@
 package com.topnice.demoweb.service.Impl;
 
 import com.topnice.demoweb.entity.Enterprise;
+import com.topnice.demoweb.entity.Users;
 import com.topnice.demoweb.repository.EnterRepository;
+import com.topnice.demoweb.repository.HostsRepository;
+import com.topnice.demoweb.repository.UsersRepository;
 import com.topnice.demoweb.service.InfoMonService;
 import com.topnice.demoweb.util.AddressUtils;
 import com.topnice.demoweb.util.HttpClient;
@@ -20,6 +23,10 @@ public class IInfoMonService implements InfoMonService {
 
     @Autowired
     EnterRepository enterRepository;
+    @Autowired
+    UsersRepository usersRepository;
+    @Autowired
+    HostsRepository hostsRepository;
 
     @Override
     public boolean callService(String enterId) {
@@ -39,6 +46,12 @@ public class IInfoMonService implements InfoMonService {
             multiValueMap.addIfAbsent("enterDay", enterprise.getEnterDayAuth());
             multiValueMap.addIfAbsent("enterAuth", enterprise.getEnterAuth());
             multiValueMap.addIfAbsent("signTime", enterprise.getEnterTimeAuth());
+            //根据默认用户id查询信息
+            Users users = usersRepository.findAllByUserId(enterprise.getDefaultUserId());
+            multiValueMap.addIfAbsent("defaultUser", users.getUserName());
+            //主机数量
+            int linkNum = hostsRepository.countAllByEnterId(enterId);
+            multiValueMap.addIfAbsent("linkNum", linkNum + "");
         }
         HttpClient.sendPostRequest(url, multiValueMap);
         return true;

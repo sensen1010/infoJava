@@ -100,6 +100,18 @@ public class HostsController {
         Hosts hosts = hostsService.modifyHostState(hostId, state);
         return mapMsg(hosts);
     }
+
+    @ApiOperation(value = "/delete/", tags = "删除主机")
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    private Map<String, Object> deleteHost(String hostId) {
+        map = new HashMap<>();
+        hostsService.deleteHost(hostId);
+        map.put("code", "0");
+        return map;
+    }
+
+
+
     Map<String, Object> mapMsg(Hosts hosts) {
         if (hosts == null) {
             map.put("code", "1");

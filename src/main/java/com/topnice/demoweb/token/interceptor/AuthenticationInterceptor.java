@@ -30,7 +30,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public static String token;
 
     @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
+    public synchronized boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
         String path = httpServletRequest.getServletPath();
         String mode = httpServletRequest.getMethod();
@@ -69,7 +69,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     throw new RuntimeException("用户不存在，请重新登录");
                 }
                 //验证权限
-
                 // 验证 token
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
                 try {

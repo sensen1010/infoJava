@@ -129,7 +129,6 @@ public class WebSocketServer {
         }else {
             updateHostState(enterId,linkId,"0");
         }
-
         //链接操作
         //判断是否存在企业主机列表
         ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
@@ -152,7 +151,6 @@ public class WebSocketServer {
             enterMap.put(enterId, webSocketMap);
             addOnlineCount();
         }
-
         System.out.println("当前用户id：" + linkId);
         //判断该链接是否存在
 //        Hosts hosts = hostsService.selectHostId(userId);

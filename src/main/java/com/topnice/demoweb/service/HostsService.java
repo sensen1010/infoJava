@@ -34,4 +34,9 @@ public interface HostsService {
 
     //根据企业id，查询企业主机数量
     int findEnterHostNum(String enterId);
+
+    //删除主机
+    void deleteHost(String hostId);
+
+
 }

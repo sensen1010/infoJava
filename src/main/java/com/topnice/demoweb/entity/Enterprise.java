@@ -8,7 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @DynamicInsert
@@ -62,16 +61,5 @@ public class Enterprise implements Serializable {
     private String enterIp;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "enterUser",
-            joinColumns = {@JoinColumn(name = "enterId", referencedColumnName = "enterId")},
-            inverseJoinColumns = {@JoinColumn(name = "userId", referencedColumnName = "userId")})
-    private Set<Users> users;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "enterHosts",
-            joinColumns = {@JoinColumn(name = "enterId", referencedColumnName = "enterId")},
-            inverseJoinColumns = {@JoinColumn(name = "hostId", referencedColumnName = "hostId")})
-    private Set<Hosts> hosts;
 
 }

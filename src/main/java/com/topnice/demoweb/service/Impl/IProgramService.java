@@ -37,6 +37,7 @@ public class IProgramService implements ProgramService {
     @Override
     public Program add(Program program) {
         program.setCreationTime(new Date());
+        program.setState("0");
         program.setProId(UUID.randomUUID().toString().replace("-", ""));
         return programRepository.save(program);
     }
