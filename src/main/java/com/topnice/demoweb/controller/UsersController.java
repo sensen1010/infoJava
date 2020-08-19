@@ -61,6 +61,7 @@ public class UsersController {
                 map.put("userId", data.getUserId());
                 map.put("userType", data.getType());
                 mmap.put("data", JSONObject.toJSONString(map));
+            //查询记录
             infoMonService.callService(data.getEnterId());
                 return mmap;
         }

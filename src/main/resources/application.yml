@@ -6,7 +6,8 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/info?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-
+    hikari:
+          connection-init-sql: set names utf8mb4
   jpa:
     hibernate:
       ddl-auto: update

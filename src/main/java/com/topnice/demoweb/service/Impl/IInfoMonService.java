@@ -19,7 +19,8 @@ import javax.transaction.Transactional;
 @Transactional
 public class IInfoMonService implements InfoMonService {
 
-    public String url = "http://192.168.1.52:8084/mon/enter/enter";
+    public String serviceUrl = "http://192.168.1.52:8084/mon/enter/enter";
+    public String softUrl = "http://192.168.1.52:8084/mon/clientUpdate/newUpdate";
 
     @Autowired
     EnterRepository enterRepository;
@@ -37,7 +38,7 @@ public class IInfoMonService implements InfoMonService {
         multiValueMap.addIfAbsent("ipv4", AddressUtils.getV4IP() + "");
         if (enterprise == null) {
             multiValueMap.addIfAbsent("enterState", "-1");
-            HttpClient.sendPostRequest(url, multiValueMap);
+            HttpClient.sendPostRequest(serviceUrl, multiValueMap);
             return true;
         } else {
             multiValueMap.addIfAbsent("enterState", "0");
@@ -53,7 +54,16 @@ public class IInfoMonService implements InfoMonService {
             int linkNum = hostsRepository.countAllByEnterId(enterId);
             multiValueMap.addIfAbsent("linkNum", linkNum + "");
         }
-        HttpClient.sendPostRequest(url, multiValueMap);
+        HttpClient.sendPostRequest(serviceUrl, multiValueMap);
         return true;
+    }
+
+    @Override
+    public String updateApkService() {
+        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.addIfAbsent("type", "APK");
+        String re = HttpClient.sendPostRequest(softUrl, multiValueMap);
+        System.out.println(re);
+        return re;
     }
 }
