@@ -78,4 +78,13 @@ public class IClientUpdateService implements ClientUpdateService {
         m.put("updateTime", DateUtil.date2TimeStamp(clientUpdate.getUpdateTime(), null));
         return JSONObject.toJSONString(m);
     }
+
+    @Override
+    public ClientUpdate LocalfindLastOne() {
+        ClientUpdate clientUpdate = clientUpdateRepository.findLastOne();
+        if (clientUpdate == null) {
+            return null;
+        }
+        return clientUpdate;
+    }
 }

@@ -44,3 +44,8 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
+nomService:
+  url:  http://192.168.1.52:8084/mon/
+update:
+  pathName: update
+

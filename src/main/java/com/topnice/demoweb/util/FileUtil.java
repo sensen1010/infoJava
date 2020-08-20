@@ -3,22 +3,106 @@ package com.topnice.demoweb.util;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.DigestUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class FileUtil {
+
+    @Value("${update.pathName}")
+    private static String updatePathName;
+
+    private static String UPLOAD_FOLDER = System.getProperty("user.dir");
+    private static String PATH = "\\webapps\\file\\";
+    private static String LocalUrl = "E:\\imgfile\\";
+
+    /**
+     * @desc: 返回上传文件地址
+     * @author: sen
+     * @date: 2020/8/20 0020 10:12
+     **/
+    public static String getUpFileUrl(String pathName) {
+
+        int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
+        String upFileUrl = "";
+        if (pathName == null || pathName.equals("")) {
+            //upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
+            upFileUrl = LocalUrl;
+        } else {
+            //upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH+pathName+"\\";
+            upFileUrl = LocalUrl + pathName + "\\";
+        }
+        return upFileUrl;
+    }
+
+
+    /**
+     * @desc: 从互联网下载文件
+     * @author: sen
+     * @date: 2020/8/20 0020 10:15
+     **/
+    public static void downLoadFromUrl(String urlStr, String fileName, String savePath) throws IOException {
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        //设置超时间为3秒
+        conn.setConnectTimeout(3 * 1000);
+        //防止屏蔽程序抓取而返回403错误
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+        //得到输入流
+        InputStream inputStream = conn.getInputStream();
+        //获取自己数组
+        byte[] getData = readInputStream(inputStream);
+
+        //文件保存位置
+        File saveDir = new File(savePath);
+        if (!saveDir.exists()) {
+            saveDir.mkdir();
+        }
+        File file = new File(saveDir + File.separator + fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if (fos != null) {
+            fos.close();
+        }
+        if (inputStream != null) {
+            inputStream.close();
+        }
+        System.out.println("info:" + url + " download success");
+    }
+
+    /**
+     * @desc: 从输入流中获取字节数组
+     * @author: sen
+     * @date: 2020/8/20 0020 10:14
+     **/
+    public static byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
+
+    /**
+     * @desc: 获取文件的MD5
+     * @author: sen
+     * @date: 2020/8/20 0020 10:13
+     **/
     public static String fileToBetyArray(InputStream fis) {
         MessageDigest md = null;
         //FileInputStream fis = null;
@@ -49,6 +133,74 @@ public class FileUtil {
         }
         return null;
     }
+
+    /**
+     * @desc: 保存json文件
+     * @author: sen
+     * @date: 2020/8/20 0020 10:13
+     **/
+    private static void saveJsonToFile(String fileName, String data) {
+        BufferedWriter writer = null;
+        File file = new File(getUpFileUrl(updatePathName) + fileName + ".json");
+        //如果文件不存在，则新建一个
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //写入
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
+            writer.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("文件写入成功！");
+    }
+
+    /**
+     * @desc: 获取json文件
+     * @author: sen
+     * @date: 2020/8/20 0020 10:13
+     **/
+    public static String getJsonfromFile(String fileName) {
+        String Path = getUpFileUrl(updatePathName) + fileName + ".json";
+        BufferedReader reader = null;
+        String laststr = "";
+        try {
+            FileInputStream fileInputStream = new FileInputStream(Path);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+            reader = new BufferedReader(inputStreamReader);
+            String tempString = null;
+            while ((tempString = reader.readLine()) != null) {
+                laststr += tempString;
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return laststr;
+    }
+
+
 
     public static String fileMd5(InputStream inputStream) {
         try {

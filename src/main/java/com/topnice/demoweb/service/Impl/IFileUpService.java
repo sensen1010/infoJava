@@ -21,10 +21,6 @@ import java.util.*;
 @Transactional
 public class IFileUpService implements FileUpService {
 
-
-    private String UPLOAD_FOLDER = System.getProperty("user.dir");
-    private String PATH = "\\webapps\\file\\";
-
     @Autowired
     FileUrlService fileUrlService;
 
@@ -84,9 +80,7 @@ public class IFileUpService implements FileUpService {
                     String fileName = fileMd5 + "." + upFileType;
                     String uuidFile = UUID.randomUUID().toString().replace("-", "");
                     //设置文件路径，
-                    int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
-                    String upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
-                    String filePath = upFileUrl + newFilePath;
+                    String filePath = FileUtil.getUpFileUrl(newFilePath);
                     File targetFile = new File(filePath);
                     if (!targetFile.exists()) {
                         targetFile.mkdirs();
@@ -156,9 +150,7 @@ public class IFileUpService implements FileUpService {
                 String fileName = apkMd5 + "." + upApkType;
                 String uuidFile = UUID.randomUUID().toString().replace("-", "");
                 //设置文件路径，
-                int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
-                String upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
-                String filePath = upFileUrl;
+                String filePath = FileUtil.getUpFileUrl(null);
                 File targetFile = new File(filePath);
                 if (!targetFile.exists()) {
                     targetFile.mkdirs();
@@ -218,9 +210,7 @@ public class IFileUpService implements FileUpService {
             String uuidFile = UUID.randomUUID().toString().replace("-", "");
             String fileName = uuidFile + "." + upFileType;
             //设置文件路径，
-            int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
-            String upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
-            String filePath = upFileUrl + newFilePath;
+            String filePath = FileUtil.getUpFileUrl(newFilePath);
             File targetFile = new File(filePath);
             if (!targetFile.exists()) {
                 targetFile.mkdirs();

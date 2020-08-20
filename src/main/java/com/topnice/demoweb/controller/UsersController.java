@@ -63,6 +63,8 @@ public class UsersController {
                 mmap.put("data", JSONObject.toJSONString(map));
             //查询记录
             infoMonService.callService(data.getEnterId());
+            //更新apk
+            infoMonService.updateApkService();
                 return mmap;
         }
     }

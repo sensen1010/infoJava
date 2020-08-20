@@ -13,4 +13,7 @@ public interface ClientUpdateService {
     //查询最后一个
     String findLastOne();
 
+    //查询最后一个
+    ClientUpdate LocalfindLastOne();
+
 }
