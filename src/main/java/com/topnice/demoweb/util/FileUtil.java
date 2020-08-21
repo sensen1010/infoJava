@@ -25,7 +25,7 @@ public class FileUtil {
 
     private static String UPLOAD_FOLDER = System.getProperty("user.dir");
     private static String PATH = "\\webapps\\file\\";
-    private static String LocalUrl = "E:\\imgfile\\";
+    private static String LocalUrl = "E:\\apache-tomcat-9.0.36\\webapps\\file\\";
 
     /**
      * @desc: 返回上传文件地址

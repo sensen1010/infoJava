@@ -45,6 +45,20 @@ public class ClientUpdateController {
     }
 
     /**
+     * @desc: 客户端更新（后端、前端）
+     * @author: sen
+     * @date: 2020/8/21 0021 14:35
+     **/
+    @RequestMapping(value = "/backFrontUpdate", method = RequestMethod.POST)
+    public synchronized Map<String, Object> backFrontUpload() {
+        map = new HashMap<>();
+
+        map.put("code", "0");
+        return map;
+    }
+
+
+    /**
      * @desc: 查询更新记录
      * @author: sen
      * @date: 2020/8/13 0013 14:26

@@ -72,33 +72,71 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
         <!--视频截图-->
-        <!-- javacv start -->
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>javacpp</artifactId>
-            <version>1.4.1</version>
-        </dependency>
+        <!--win系统X64位-->
+        <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv -->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bytedeco.javacpp-presets</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>opencv-platform</artifactId>
+            <artifactId>opencv</artifactId>
             <version>3.4.1-1.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>ffmpeg-platform</artifactId>
-            <version>3.4.2-1.4.1</version>
+            <artifactId>opencv</artifactId>
+            <version>3.4.1-1.4.1</version>
+            <classifier>windows-x86_64</classifier>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bytedeco.javacpp-presets/ffmpeg -->
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>4.0.1-1.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>4.0.1-1.4.2</version>
+            <classifier>windows-x86_64</classifier>
+        </dependency>
+
+        <!-- javacv start -->
+        <!--<dependency>-->
+        <!--<groupId>org.bytedeco</groupId>-->
+        <!--<artifactId>javacpp</artifactId>-->
+        <!--<version>1.4.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.bytedeco</groupId>-->
+        <!--<artifactId>javacv</artifactId>-->
+        <!--<version>1.4.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.bytedeco.javacpp-presets</groupId>-->
+        <!--<artifactId>opencv-platform</artifactId>-->
+        <!--<version>3.4.1-1.4.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.bytedeco.javacpp-presets</groupId>-->
+        <!--<artifactId>ffmpeg-platform</artifactId>-->
+        <!--<version>3.4.2-1.4.1</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--<groupId>org.bytedeco.javacpp-presets</groupId>-->
+        <!--<artifactId>opencv-platform</artifactId>-->
+        <!--<version>3.4.1-1.4.1</version>-->
+        <!--</dependency>-->
         <!-- javacv end -->
-        <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>opencv-platform</artifactId>
-            <version>3.4.1-1.4.1</version>
-        </dependency>
         <!--StringUtils-->
         <dependency>
             <groupId>commons-lang</groupId>
