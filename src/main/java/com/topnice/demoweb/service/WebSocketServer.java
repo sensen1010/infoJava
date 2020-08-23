@@ -21,8 +21,8 @@ import java.net.URLDecoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/imserver/{enterId}/{linkId}/{name}")
 @Component
+@ServerEndpoint("/imserver/{enterId}/{linkId}/{name}")
 public class WebSocketServer {
     private static Logger log = LoggerFactory.getLogger(WebSocketServer.class);
     /**

@@ -41,7 +41,7 @@ public class TokenService {
         String token = "";
         token = JWT.create().withAudience(user.getUserId())// 将 user id 保存到 token 里面
                 .withExpiresAt(date)//设置过期时间
-                .sign(Algorithm.HMAC256(user.getPassword()));// 以 password 作为 token 的密钥
+                .sign(Algorithm.HMAC256(user.getPow()));// 以 password 作为 token 的密钥
 
 
         return token;

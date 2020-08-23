@@ -75,7 +75,7 @@ public class IEnterpriseService implements EnterpriseService {
         //加密
         String md5Str = DigestUtils.md5DigestAsHex(pow.getBytes());
         String encrypPow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
-        users.setPassword(encrypPow);
+        users.setPow(encrypPow);
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
         Users re = usersRepository.save(users);
         List<Map<String, String>> list = new ArrayList<>();
@@ -83,7 +83,7 @@ public class IEnterpriseService implements EnterpriseService {
         map.put("userId", re.getUserId());
         map.put("userName", re.getUserName());
         map.put("name", re.getName());
-        map.put("pow", re.getPassword());
+        map.put("pow", re.getPow());
         map.put("type", re.getType());
         list.add(map);
         //更新保存默认账号id
@@ -126,7 +126,7 @@ public class IEnterpriseService implements EnterpriseService {
         //加密
         String md5Str = DigestUtils.md5DigestAsHex(pow.getBytes());
         String encrypPow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
-        users.setPassword(encrypPow);
+        users.setPow(encrypPow);
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
 
         Users re = usersRepository.save(users);
@@ -135,7 +135,7 @@ public class IEnterpriseService implements EnterpriseService {
         map.put("userId", re.getUserId());
         map.put("userName", re.getUserName());
         map.put("name", re.getName());
-        map.put("pow", re.getPassword());
+        map.put("pow", re.getPow());
         map.put("type", re.getType());
         list.add(map);
         //更新保存默认账号id

@@ -37,7 +37,7 @@ public class Users implements Serializable {
     private String state;
 
     @ApiModelProperty(value = "密码")
-    private String password;
+    private String pow;
 
     @ApiModelProperty(value = "名称")
     private String name;

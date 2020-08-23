@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Integer> {
 
-    Users findAllByUserNameAndPassword(String userName, String password);
+    Users findAllByUserNameAndPow(String userName, String pow);
 
     Users findAllByUserId(String userId);
 

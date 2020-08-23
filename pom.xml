@@ -96,6 +96,12 @@
             <version>3.4.1-1.4.1</version>
             <classifier>windows-x86_64</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>opencv</artifactId>
+            <version>3.4.1-1.4.1</version>
+            <classifier>linux-x86_64</classifier>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.bytedeco.javacpp-presets/ffmpeg -->
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
@@ -108,7 +114,12 @@
             <version>4.0.1-1.4.2</version>
             <classifier>windows-x86_64</classifier>
         </dependency>
-
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>4.0.1-1.4.2</version>
+            <classifier>linux-x86_64</classifier>
+        </dependency>
         <!-- javacv start -->
         <!--<dependency>-->
         <!--<groupId>org.bytedeco</groupId>-->
@@ -155,11 +166,11 @@
         <!--<artifactId>spring-session</artifactId>-->
         <!--</dependency>-->
         <!--tomcat-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
         <!--mysql数据库、数据驱动、jpa依赖-->
         <dependency>
             <groupId>mysql</groupId>

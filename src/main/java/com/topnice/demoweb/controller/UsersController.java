@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,15 +38,17 @@ public class UsersController {
     private Map<String, String> mmap;
 
     @ApiOperation(value = "login", notes = "登录接口")
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, String> login(Users users) {
         mmap = new HashMap<>();
         //返回  1：账号密码错误  2：使用时间超时 0：登录成功
+        System.out.println("进入登录asd"+new Date());
         Users data = usersService.login(users);
         if (data == null) {
             mmap.put("code", "1");
             return mmap;
         } else {
+            System.out.println("进入checkEnter"+new Date());
             boolean check = enterpriseService.checkEnter(data.getEnterId());
             if (!check) {
                 mmap.put("code", "2");
@@ -62,10 +65,10 @@ public class UsersController {
                 map.put("userType", data.getType());
                 mmap.put("data", JSONObject.toJSONString(map));
             //查询记录
-            infoMonService.callService(data.getEnterId());
+            //infoMonService.callService(data.getEnterId());
             //更新apk
-            infoMonService.updateApkService();
-                return mmap;
+           // infoMonService.updateApkService();
+            return mmap;
         }
     }
 

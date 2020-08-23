@@ -31,20 +31,26 @@ public class IUserService implements UsersService {
 
     @Override
     public Users login(Users users) {
+        System.out.println("进入登录service"+new Date());
         String userName = users.getUserName().trim();
-        String md5Str = DigestUtils.md5DigestAsHex(users.getPassword().trim().getBytes());
+        String md5Str = DigestUtils.md5DigestAsHex(users.getPow().trim().getBytes());
         String pow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
-        Users user = userRepository.findAllByUserNameAndPassword(userName, pow);
+        System.out.println("密码转化"+new Date());
+        System.out.println("根据账号密码查询"+new Date());
+        Users user = userRepository.findAllByUserNameAndPow(userName, pow);
         if (user == null) {
             return null;
         }
+        System.out.println("用户状态为1返回"+new Date());
         if (user.getState().equals("1")){
             return null;
         }
+        System.out.println("企业状态1返回"+new Date());
         Enterprise enterprise=enterRepository.findAllByEnterId(user.getEnterId());
         if (enterprise.getState().equals("1")){
             return null;
         }
+        System.out.println("返回用户"+new Date());
         return user;
     }
 
@@ -60,9 +66,9 @@ public class IUserService implements UsersService {
             return null;
         }
         //加密
-        String md5Str = DigestUtils.md5DigestAsHex(users.getPassword().getBytes());
+        String md5Str = DigestUtils.md5DigestAsHex(users.getPow().getBytes());
         String pow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
-        users.setPassword(pow);
+        users.setPow(pow);
         //设置类型
         users.setType("2");
         users.setState("0");
@@ -168,7 +174,7 @@ public class IUserService implements UsersService {
         }
         String md5Str = DigestUtils.md5DigestAsHex(pow.getBytes());
         String newPow = DigestUtils.md5DigestAsHex(md5Str.getBytes());
-        users.setPassword(newPow);
+        users.setPow(newPow);
         return userRepository.saveAndFlush(users);
     }
 
