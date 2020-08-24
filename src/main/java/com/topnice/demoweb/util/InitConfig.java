@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -41,15 +38,6 @@ public class InitConfig implements ApplicationRunner {
                     }
                 }
             }).start();
-        //获取项目的绝对路径
-        File path = null;
-        try {
-            path = new File(ResourceUtils.getURL("classpath:").getPath());
-            if (!path.exists()) path = new File("");
-            System.out.println("path:" + path.getAbsolutePath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         try {
             InetAddress address = InetAddress.getLocalHost();
             System.out.println("http://" + address.getHostAddress() + ":8080/");

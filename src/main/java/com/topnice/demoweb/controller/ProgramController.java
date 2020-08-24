@@ -31,7 +31,7 @@ public class ProgramController {
 
 
     @ApiOperation(value = "/pro/add", notes = "添加节目")
-    @RequestMapping("/pro/add")
+    @RequestMapping(value = "/pro/add", method = RequestMethod.POST)
     private Map<String, String> addProgram(Program program) {
         map = new HashMap<>();
         System.out.println(program);
@@ -96,7 +96,7 @@ public class ProgramController {
     }
 
     @ApiOperation(value = "/proHis/add", notes = "企业发布节目")
-    @RequestMapping("/proHis/add")
+    @RequestMapping(value = "/proHis/add", method = RequestMethod.POST)
     private Map<String, String> addProHis(String enterId,String userId,String proId,String type,String[] hostList) {
         map = new HashMap<>();
         ProHis proHis= proHisService.add(enterId,userId,proId,type,hostList);
@@ -110,7 +110,7 @@ public class ProgramController {
     }
 
     @ApiOperation(value = "/proHis/select", notes = "查询发布节目历史")
-    @RequestMapping("/proHis/select")
+    @RequestMapping(value = "/proHis/select", method = RequestMethod.GET)
     private Map<String, String> selectProHis(String enterId,String name, String page, String size) {
         map = new HashMap<>();
         map.put("data", proHisService.enterFindByName(enterId,name,page,size));

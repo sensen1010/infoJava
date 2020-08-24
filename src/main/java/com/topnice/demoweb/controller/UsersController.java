@@ -64,10 +64,16 @@ public class UsersController {
                 map.put("userId", data.getUserId());
                 map.put("userType", data.getType());
                 mmap.put("data", JSONObject.toJSONString(map));
-            //查询记录
+            //向服务器推送记录
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    infoMonService.callService(data.getEnterId());
+                }
+            }).start();
             //infoMonService.callService(data.getEnterId());
-            //更新apk
-           // infoMonService.updateApkService();
+
+            // infoMonService.updateApkService();
             return mmap;
         }
     }

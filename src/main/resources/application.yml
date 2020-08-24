@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/info?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: zhixueinfo
+    password: 123456
     hikari:
           connection-init-sql: set names utf8mb4
   jpa:
@@ -46,6 +46,8 @@ server:
 
 nomService:
   url:  http://192.168.1.52:8084/mon/
+updateService:
+    url:  http://localhost:8080/softupdate/
 update:
   pathName: update
 

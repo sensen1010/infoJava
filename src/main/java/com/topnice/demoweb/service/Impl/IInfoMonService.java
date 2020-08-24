@@ -31,9 +31,13 @@ public class IInfoMonService implements InfoMonService {
     public String service;
     @Value("${update.pathName}")
     public String updatePath;
+    @Value("${updateService.uel}")
+    public String updateService;
 
     public String serviceUrl = "enter/enter";
     public String softUrl = "clientUpdate/newUpdate";
+    public String updateSoftUrl = "update/update";
+
 
     @Autowired
     EnterRepository enterRepository;
@@ -135,6 +139,13 @@ public class IInfoMonService implements InfoMonService {
             }
         }
         System.out.println(re);
+        return re;
+    }
+
+    @Override
+    public String updateClientService() {
+        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        String re = HttpClient.sendPostRequest(updateService + updateSoftUrl, multiValueMap);
         return re;
     }
 

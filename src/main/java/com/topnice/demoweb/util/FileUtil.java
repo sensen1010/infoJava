@@ -23,9 +23,14 @@ public class FileUtil {
     @Value("${update.pathName}")
     private static String updatePathName;
 
-    private static String UPLOAD_FOLDER = System.getProperty("user.dir");
-    private static String PATH = "\\webapps\\file\\";
-    private static String LocalUrl = "E:\\apache-tomcat-9.0.36\\webapps\\file\\";
+    //    private static String UPLOAD_FOLDER = System.getProperty("user.dir");
+//    private static String PATH = "\\webapps\\file\\";
+//    private static String LocalUrl = "E:\\apache-tomcat-9.0.36\\webapps\\file\\";
+    //tomcat地址
+    private static String UPLOAD_FOLDER = System.getProperty("catalina.home");
+    private static String PATH = "/webapps/file/";
+
+
 
     /**
      * @desc: 返回上传文件地址
@@ -34,14 +39,13 @@ public class FileUtil {
      **/
     public static String getUpFileUrl(String pathName) {
 
-        int lastURL = UPLOAD_FOLDER.lastIndexOf("\\");
         String upFileUrl = "";
         if (pathName == null || pathName.equals("")) {
             //upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH;
-            upFileUrl = LocalUrl;
+            upFileUrl = UPLOAD_FOLDER + PATH;
         } else {
             //upFileUrl = UPLOAD_FOLDER.substring(0, lastURL) + PATH+pathName+"\\";
-            upFileUrl = LocalUrl + pathName + "\\";
+            upFileUrl = UPLOAD_FOLDER + PATH + pathName + "/";
         }
         return upFileUrl;
     }
