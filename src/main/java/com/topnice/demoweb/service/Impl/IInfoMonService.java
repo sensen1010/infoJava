@@ -31,7 +31,7 @@ public class IInfoMonService implements InfoMonService {
     public String service;
     @Value("${update.pathName}")
     public String updatePath;
-    @Value("${updateService.uel}")
+    @Value("${updateService.url}")
     public String updateService;
 
     public String serviceUrl = "enter/enter";

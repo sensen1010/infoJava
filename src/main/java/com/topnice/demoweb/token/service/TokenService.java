@@ -23,8 +23,6 @@ public class TokenService {
     private static final String TOKEN_SECRET = "joijsdfjlsjfljfljl5135313135";
 
     public String getToken(Users user) {
-
-
         //过期时间
         Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
 //        //私钥及加密算法

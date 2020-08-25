@@ -74,7 +74,11 @@ public class IUserService implements UsersService {
         users.setState("0");
         users.setCreationTime(new Date());
         users.setUserId(UUID.randomUUID().toString().replace("-", ""));
-        users.setEnterId(enterId);
+        if (enterId == null || enterId.equals("")) {
+            users.setEnterId(users.getEnterId());
+        } else {
+            users.setEnterId(enterId);
+        }
         return userRepository.save(users);
     }
 
@@ -99,7 +103,9 @@ public class IUserService implements UsersService {
             map.put("state", users.getState());
             map.put("name", users.getName());
             Enterprise enterprise = enterRepository.findAllByEnterId(users.getEnterId());
-            map.put("enterName", enterprise.getEnterName());
+            if (enterprise != null) {
+                map.put("enterName", enterprise.getEnterName());
+            }
             map.put("creationTime", DateUtil.date2TimeStamp(users.getCreationTime(), "yyyy-MM-dd HH:mm:ss") + "");
             map.put("userId", users.getUserId());
             list.add(map);
@@ -113,33 +119,42 @@ public class IUserService implements UsersService {
     @Override
     public String adminFindByNameList(String enterId, String name, String state, String page, String size) {
 
-        name = name == null || name.equals("") ? "" : name;
-        //如果为null默认为0
-        Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
-        //如果为null默认为10
-        Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
-        Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "id");
-        Page<Users> all = userRepository.findAllByEnterIdContainingAndNameContainingAndState(enterId, name, state, pageable);
-        List<Map<String, Object>> lists = new ArrayList<>();
-        List<Map<String, String>> list = new ArrayList<>();
-        Map<String, Object> maps = new HashMap<>();
-        for (Users users : all) {
-            Map<String, String> map = new HashMap<>();
-            map.put("id", users.getId() + "");
-            map.put("userName", users.getUserName());
-            map.put("state", users.getState());
-            map.put("enterId", users.getEnterId());
-            Enterprise enterprise = enterRepository.findAllByEnterId(users.getEnterId());
-            map.put("enterName", enterprise.getEnterName());
-            map.put("name", users.getName());
-            map.put("creationTime", DateUtil.date2TimeStamp(users.getCreationTime(), "yyyy-MM-dd HH:mm:ss") + "");
-            map.put("userId", users.getUserId());
-            list.add(map);
+        try {
+            enterId = enterId == null || enterId.equals("") ? "" : enterId;
+            name = name == null || name.equals("") ? "" : name;
+            //如果为null默认为0
+            Integer rpage = page == null || page.equals("") ? 0 : Integer.parseInt(page);
+            //如果为null默认为10
+            Integer rsize = size == null || size.equals("") ? 10 : Integer.parseInt(size);
+            Pageable pageable = PageRequest.of(rpage, rsize, Sort.Direction.DESC, "id");
+            Page<Users> all = userRepository.findAllByEnterIdContainingAndNameContainingAndState(enterId, name, state, pageable);
+            List<Map<String, Object>> lists = new ArrayList<>();
+            List<Map<String, String>> list = new ArrayList<>();
+            Map<String, Object> maps = new HashMap<>();
+            for (Users users : all) {
+                Map<String, String> map = new HashMap<>();
+                map.put("id", users.getId() + "");
+                map.put("userName", users.getUserName());
+                map.put("state", users.getState());
+                map.put("enterId", users.getEnterId());
+                Enterprise enterprise = enterRepository.findAllByEnterId(users.getEnterId());
+                if (enterprise != null) {
+                    map.put("enterName", enterprise.getEnterName());
+                }
+                map.put("name", users.getName());
+                map.put("creationTime", DateUtil.date2TimeStamp(users.getCreationTime(), "yyyy-MM-dd HH:mm:ss") + "");
+                map.put("userId", users.getUserId());
+                list.add(map);
+            }
+            maps.put("size", all.getTotalElements());
+            maps.put("data", JSONObject.toJSONString(list));
+            lists.add(maps);
+            return JSONObject.toJSONString(lists);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        maps.put("size", all.getTotalElements());
-        maps.put("data", JSONObject.toJSONString(list));
-        lists.add(maps);
-        return JSONObject.toJSONString(lists);
+
+        return null;
     }
 
     @Override
@@ -181,6 +196,7 @@ public class IUserService implements UsersService {
     @Override
     public Users modifyUserState(String userId, String state, String enterId) {
         //根据企业id+用户id查询是否存在
+
         Users users=userRepository.findAllByUserIdAndEnterId(userId, enterId);
         if (users==null){
             return null;

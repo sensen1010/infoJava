@@ -83,7 +83,7 @@ public class UsersController {
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public Map<String, String> add(Users users, String enterId) {
         mmap = new HashMap<>();
-        Users users1 = usersService.add(users, enterId);
+        Users users1 = usersService.add(users, null);
         if (users1 == null) {
             mmap.put("code", "1");
         } else {
@@ -111,6 +111,7 @@ public class UsersController {
     @RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
     public Map<String, String> delete(@PathVariable("userId") String userId,String state,String enterId) {
         mmap = new HashMap<>();
+        System.out.println(userId + "#########" + state + "#########" + enterId);
         Users users1 = usersService.modifyUserState(userId, state, enterId);
         if (users1 == null) {
             mmap.put("code", "1");
